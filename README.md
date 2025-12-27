@@ -10,7 +10,7 @@ Multi-theme UI library for Roblox exploits.
 ## Usage
 
 ```lua
-local Spectrum = loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_USERNAME/spectrum/main/init.lua"))()
+local Spectrum = loadstring(game:HttpGet("https://raw.githubusercontent.com/UL4Z/spectrum/main/init.lua"))()
 
 local UI = Spectrum.new({
     title = "My Script",
