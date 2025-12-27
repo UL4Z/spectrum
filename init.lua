@@ -153,7 +153,7 @@ function Spectrum:Window()
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "Spectrum_" .. tostring(math.random(100000, 999999))
     ScreenGui.IgnoreGuiInset = true
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
     ScreenGui.ResetOnSpawn = false
     pcall(function() ScreenGui.Parent = CoreGui end)
     if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
@@ -168,6 +168,9 @@ function Spectrum:Window()
     Main.Draggable = true
     Main.ZIndex = 1
     Main.Parent = ScreenGui
+    
+    -- Store ScreenGui reference for dropdown popups
+    lib._screenGui = ScreenGui
     
     corner(Main, theme.sizes.corner)
     stroke(Main, theme.window.border, theme.window.border_thickness)
@@ -702,16 +705,18 @@ function Spectrum:Window()
                 
                 corner(Button, 2)
                 
+                -- Parent dropdown popup to ScreenGui (top level) to avoid clipping
                 local DropFrame = Instance.new("Frame")
                 DropFrame.Name = "DropFrame"
-                DropFrame.Size = UDim2.new(0.6, 0, 0, 0)
-                DropFrame.Position = UDim2.new(0.4, 0, 1, 2)
+                DropFrame.Size = UDim2.new(0, 0, 0, 0) -- Will be sized on open
+                DropFrame.Position = UDim2.new(0, 0, 0, 0) -- Will be positioned on open
                 DropFrame.BackgroundColor3 = theme.dropdown.list_bg
                 DropFrame.BorderSizePixel = 0
                 DropFrame.Visible = false
-                DropFrame.ZIndex = 50
+                DropFrame.ZIndex = 9999 -- Very high to be on top
                 DropFrame.ClipsDescendants = true
-                DropFrame.Parent = Frame
+                -- Parent to ScreenGui at top level to avoid clipping
+                DropFrame.Parent = lib._screenGui or Frame
                 
                 corner(DropFrame, 2)
                 stroke(DropFrame, theme.dropdown.border, 1)
@@ -725,11 +730,14 @@ function Spectrum:Window()
                 local function toggleDrop()
                     open = not open
                     if open then
+                        -- Calculate absolute position from button
+                        local btnPos = Button.AbsolutePosition
+                        local btnSize = Button.AbsoluteSize
                         local h = math.min(#options * 20, 100)
-                        DropFrame.Size = UDim2.new(0.6, 0, 0, h)
+                        DropFrame.Position = UDim2.new(0, btnPos.X, 0, btnPos.Y + btnSize.Y + 2)
+                        DropFrame.Size = UDim2.new(0, btnSize.X, 0, h)
                         DropFrame.Visible = true
                     else
-                        DropFrame.Size = UDim2.new(0.6, 0, 0, 0)
                         DropFrame.Visible = false
                     end
                 end
@@ -746,7 +754,7 @@ function Spectrum:Window()
                     OptBtn.Font = theme.fonts.value
                     OptBtn.TextSize = theme.sizes.value
                     OptBtn.AutoButtonColor = false
-                    OptBtn.ZIndex = 51
+                    OptBtn.ZIndex = 10000
                     OptBtn.Parent = DropFrame
                     
                     OptBtn.MouseEnter:Connect(function()
