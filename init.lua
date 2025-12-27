@@ -908,6 +908,263 @@ function Spectrum:Window()
                 return Label
             end
             
+            function group:ColorPicker(text, default, callback)
+                local theme = lib.theme
+                local accent = lib.accent
+                
+                local Frame = Instance.new("Frame")
+                Frame.Size = UDim2.new(1, -10, 0, 28)
+                Frame.BackgroundTransparency = 1
+                Frame.ZIndex = 10
+                Frame.Parent = self._content
+                
+                local Label = Instance.new("TextLabel")
+                Label.Size = UDim2.new(0.6, 0, 1, 0)
+                Label.BackgroundTransparency = 1
+                Label.Text = text
+                Label.TextColor3 = theme.textbox.label
+                Label.Font = theme.fonts.label
+                Label.TextSize = theme.sizes.label
+                Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.ZIndex = 11
+                Label.Parent = Frame
+                
+                local currentColor = default or Color3.fromRGB(255, 0, 0)
+                
+                local ColorBtn = Instance.new("TextButton")
+                ColorBtn.Size = UDim2.new(0, 50, 0, 20)
+                ColorBtn.Position = UDim2.new(1, -50, 0.5, -10)
+                ColorBtn.BackgroundColor3 = currentColor
+                ColorBtn.Text = ""
+                ColorBtn.AutoButtonColor = false
+                ColorBtn.ZIndex = 11
+                ColorBtn.Parent = Frame
+                corner(ColorBtn, 3)
+                stroke(ColorBtn, theme.groupbox.border, 1)
+                
+                local PickerFrame = Instance.new("Frame")
+                PickerFrame.Size = UDim2.new(0, 150, 0, 120)
+                PickerFrame.Position = UDim2.new(1, -150, 1, 5)
+                PickerFrame.BackgroundColor3 = theme.groupbox.background
+                PickerFrame.BorderSizePixel = 0
+                PickerFrame.Visible = false
+                PickerFrame.ZIndex = 60
+                PickerFrame.Parent = Frame
+                corner(PickerFrame, 4)
+                stroke(PickerFrame, theme.groupbox.border, 1)
+                
+                local SatVal = Instance.new("ImageLabel")
+                SatVal.Size = UDim2.new(0, 100, 0, 80)
+                SatVal.Position = UDim2.new(0, 8, 0, 8)
+                SatVal.BackgroundColor3 = Color3.fromHSV(1, 1, 1)
+                SatVal.Image = "rbxassetid://4155801252"
+                SatVal.ZIndex = 61
+                SatVal.Parent = PickerFrame
+                corner(SatVal, 2)
+                
+                local HueBar = Instance.new("ImageLabel")
+                HueBar.Size = UDim2.new(0, 15, 0, 80)
+                HueBar.Position = UDim2.new(0, 115, 0, 8)
+                HueBar.BackgroundColor3 = Color3.new(1, 1, 1)
+                HueBar.Image = "rbxassetid://3641079629"
+                HueBar.ZIndex = 61
+                HueBar.Parent = PickerFrame
+                corner(HueBar, 2)
+                
+                local SatValPicker = Instance.new("Frame")
+                SatValPicker.Size = UDim2.new(0, 6, 0, 6)
+                SatValPicker.BackgroundColor3 = Color3.new(1, 1, 1)
+                SatValPicker.BorderSizePixel = 0
+                SatValPicker.ZIndex = 62
+                SatValPicker.Parent = SatVal
+                corner(SatValPicker, 3)
+                stroke(SatValPicker, Color3.new(0, 0, 0), 1)
+                
+                local HuePicker = Instance.new("Frame")
+                HuePicker.Size = UDim2.new(1, 0, 0, 3)
+                HuePicker.BackgroundColor3 = Color3.new(1, 1, 1)
+                HuePicker.BorderSizePixel = 0
+                HuePicker.ZIndex = 62
+                HuePicker.Parent = HueBar
+                stroke(HuePicker, Color3.new(0, 0, 0), 1)
+                
+                local h, s, v = Color3.toHSV(currentColor)
+                
+                local function updateColor()
+                    currentColor = Color3.fromHSV(h, s, v)
+                    ColorBtn.BackgroundColor3 = currentColor
+                    SatVal.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
+                    SatValPicker.Position = UDim2.new(s, -3, 1 - v, -3)
+                    HuePicker.Position = UDim2.new(0, 0, h, -1)
+                    if callback then callback(currentColor) end
+                end
+                
+                updateColor()
+                
+                local open = false
+                ColorBtn.MouseButton1Click:Connect(function()
+                    open = not open
+                    PickerFrame.Visible = open
+                end)
+                
+                local draggingSV, draggingH = false, false
+                
+                SatVal.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then draggingSV = true end
+                end)
+                HueBar.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then draggingH = true end
+                end)
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        draggingSV, draggingH = false, false
+                    end
+                end)
+                UserInputService.InputChanged:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseMovement then
+                        if draggingSV then
+                            s = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / SatVal.AbsoluteSize.X, 0, 1)
+                            v = 1 - math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / SatVal.AbsoluteSize.Y, 0, 1)
+                            updateColor()
+                        elseif draggingH then
+                            h = math.clamp((input.Position.Y - HueBar.AbsolutePosition.Y) / HueBar.AbsoluteSize.Y, 0, 1)
+                            updateColor()
+                        end
+                    end
+                end)
+                
+                return {
+                    getColor = function() return currentColor end,
+                    setColor = function(c) h, s, v = Color3.toHSV(c); updateColor() end
+                }
+            end
+            
+            function group:MultiSelect(text, options, defaults, callback)
+                local theme = lib.theme
+                local accent = lib.accent
+                
+                local Frame = Instance.new("Frame")
+                Frame.Size = UDim2.new(1, -10, 0, 28)
+                Frame.BackgroundTransparency = 1
+                Frame.ZIndex = 10
+                Frame.ClipsDescendants = false
+                Frame.Parent = self._content
+                
+                local Label = Instance.new("TextLabel")
+                Label.Size = UDim2.new(0.35, 0, 1, 0)
+                Label.BackgroundTransparency = 1
+                Label.Text = text
+                Label.TextColor3 = theme.dropdown.text
+                Label.Font = theme.fonts.label
+                Label.TextSize = theme.sizes.label
+                Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.ZIndex = 11
+                Label.Parent = Frame
+                
+                local selected = {}
+                for _, d in ipairs(defaults or {}) do selected[d] = true end
+                
+                local function getDisplayText()
+                    local items = {}
+                    for _, opt in ipairs(options) do
+                        if selected[opt] then table.insert(items, opt) end
+                    end
+                    if #items == 0 then return "None ▼" end
+                    if #items > 2 then return #items .. " selected ▼" end
+                    return table.concat(items, ", ") .. " ▼"
+                end
+                
+                local Button = Instance.new("TextButton")
+                Button.Size = UDim2.new(0.6, 0, 0, 22)
+                Button.Position = UDim2.new(0.4, 0, 0.5, -11)
+                Button.BackgroundColor3 = theme.dropdown.background
+                Button.BorderSizePixel = 0
+                Button.Text = getDisplayText()
+                Button.TextColor3 = theme.dropdown.text
+                Button.Font = theme.fonts.value
+                Button.TextSize = theme.sizes.value
+                Button.AutoButtonColor = false
+                Button.ZIndex = 11
+                Button.Parent = Frame
+                corner(Button, 2)
+                
+                local DropFrame = Instance.new("Frame")
+                DropFrame.Size = UDim2.new(0.6, 0, 0, 0)
+                DropFrame.Position = UDim2.new(0.4, 0, 1, 2)
+                DropFrame.BackgroundColor3 = theme.dropdown.list_bg
+                DropFrame.BorderSizePixel = 0
+                DropFrame.Visible = false
+                DropFrame.ZIndex = 50
+                DropFrame.ClipsDescendants = true
+                DropFrame.Parent = Frame
+                corner(DropFrame, 2)
+                stroke(DropFrame, theme.dropdown.border, 1)
+                
+                local List = Instance.new("UIListLayout")
+                List.SortOrder = Enum.SortOrder.LayoutOrder
+                List.Padding = UDim.new(0, 1)
+                List.Parent = DropFrame
+                
+                local open = false
+                local function toggleDrop()
+                    open = not open
+                    DropFrame.Size = UDim2.new(0.6, 0, 0, open and math.min(#options * 22, 110) or 0)
+                    DropFrame.Visible = open
+                end
+                
+                Button.MouseButton1Click:Connect(toggleDrop)
+                
+                local optBtns = {}
+                for _, opt in ipairs(options) do
+                    local OptBtn = Instance.new("TextButton")
+                    OptBtn.Size = UDim2.new(1, 0, 0, 22)
+                    OptBtn.BackgroundColor3 = selected[opt] and theme.dropdown.list_item_hover or theme.dropdown.list_item
+                    OptBtn.BorderSizePixel = 0
+                    OptBtn.Text = (selected[opt] and "✓ " or "   ") .. opt
+                    OptBtn.TextColor3 = theme.dropdown.list_text
+                    OptBtn.Font = theme.fonts.value
+                    OptBtn.TextSize = theme.sizes.value
+                    OptBtn.TextXAlignment = Enum.TextXAlignment.Left
+                    OptBtn.AutoButtonColor = false
+                    OptBtn.ZIndex = 51
+                    OptBtn.Parent = DropFrame
+                    optBtns[opt] = OptBtn
+                    
+                    local function updateBtn()
+                        OptBtn.Text = (selected[opt] and "✓ " or "   ") .. opt
+                        OptBtn.BackgroundColor3 = selected[opt] and theme.dropdown.list_item_hover or theme.dropdown.list_item
+                    end
+                    
+                    OptBtn.MouseButton1Click:Connect(function()
+                        selected[opt] = not selected[opt]
+                        updateBtn()
+                        Button.Text = getDisplayText()
+                        if callback then
+                            local list = {}
+                            for _, o in ipairs(options) do if selected[o] then table.insert(list, o) end end
+                            callback(list)
+                        end
+                    end)
+                end
+                
+                return {
+                    getSelected = function()
+                        local list = {}
+                        for _, o in ipairs(options) do if selected[o] then table.insert(list, o) end end
+                        return list
+                    end,
+                    setSelected = function(list)
+                        selected = {}
+                        for _, v in ipairs(list) do selected[v] = true end
+                        for opt, btn in pairs(optBtns) do
+                            btn.Text = (selected[opt] and "✓ " or "   ") .. opt
+                            btn.BackgroundColor3 = selected[opt] and theme.dropdown.list_item_hover or theme.dropdown.list_item
+                        end
+                        Button.Text = getDisplayText()
+                    end
+                }
+            end
+            
             return group
         end
         
