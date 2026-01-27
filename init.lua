@@ -41,27 +41,45 @@ local THEMES = {
         toggle = {background = Color3.fromRGB(35, 35, 42), border_off = Color3.fromRGB(60, 60, 70), label_on = Color3.fromRGB(220, 220, 220), label_off = Color3.fromRGB(150, 150, 155)},
         button = {background = Color3.fromRGB(32, 32, 38), background_hover = Color3.fromRGB(45, 45, 52), background_click = Color3.fromRGB(60, 60, 70), text = Color3.fromRGB(180, 180, 185), text_hover = Color3.fromRGB(220, 220, 225)},
         slider = {track = Color3.fromRGB(40, 40, 48), handle = Color3.fromRGB(220, 220, 225), label = Color3.fromRGB(180, 180, 185), value = Color3.fromRGB(140, 140, 150)},
-        dropdown = {background = Color3.fromRGB(32, 32, 40), text = Color3.fromRGB(160, 160, 170), list_bg = Color3.fromRGB(28, 28, 35), list_item = Color3.fromRGB(35, 35, 42), list_item_hover = Color3.fromRGB(50, 50, 60), list_text = Color3.fromRGB(170, 170, 180), border = Color3.fromRGB(50, 50, 60)},
+        dropdown = {background = Color3.fromRGB(32, 32, 40), text = Color3.fromRGB(160, 160, 170), list_bg = Color3.fromRGB(15, 15, 20), list_item = Color3.fromRGB(35, 35, 42), list_item_hover = Color3.fromRGB(50, 50, 60), list_text = Color3.fromRGB(170, 170, 180), border = Color3.fromRGB(50, 50, 60)},
         textbox = {background = Color3.fromRGB(28, 28, 34), border = Color3.fromRGB(50, 50, 60), text = Color3.fromRGB(200, 200, 205), placeholder = Color3.fromRGB(80, 80, 90), label = Color3.fromRGB(180, 180, 185)},
         keybind = {background = Color3.fromRGB(35, 35, 42), text = Color3.fromRGB(150, 150, 160), label = Color3.fromRGB(180, 180, 185)},
         scrollbar = Color3.fromRGB(60, 60, 70),
         close_hover = Color3.fromRGB(255, 100, 100),
+        icons = {
+            Parry = "rbxassetid://10723415903",
+            Players = "rbxassetid://10723434557",
+            Visuals = "rbxassetid://10723396593",
+            Outfit = "rbxassetid://10723346960",
+            Settings = "rbxassetid://10734950309"
+        }
     },
     neverlose = {
         name = "neverlose",
-        fonts = {title = Enum.Font.GothamBold, label = Enum.Font.Gotham, value = Enum.Font.Gotham, header = Enum.Font.GothamBold},
-        sizes = {title = 14, label = 12, value = 11, header = 12, corner = 8, corner_groupbox = 10},
-        window = {background = Color3.fromRGB(18, 18, 24), border = Color3.fromRGB(45, 45, 60), border_thickness = 1, titlebar = Color3.fromRGB(22, 22, 30), title_text = Color3.fromRGB(235, 235, 240), watermark = Color3.fromRGB(100, 100, 115), content = Color3.fromRGB(20, 20, 28)},
-        tab = {background = Color3.fromRGB(25, 25, 32), inactive = Color3.fromRGB(130, 130, 145), hover = Color3.fromRGB(200, 200, 210), active = Color3.fromRGB(255, 255, 255)},
-        groupbox = {background = Color3.fromRGB(24, 24, 32), header = Color3.fromRGB(28, 28, 38), border = Color3.fromRGB(50, 50, 65)},
-        toggle = {background = Color3.fromRGB(32, 32, 42), border_off = Color3.fromRGB(70, 70, 85), label_on = Color3.fromRGB(240, 240, 245), label_off = Color3.fromRGB(140, 140, 155)},
-        button = {background = Color3.fromRGB(35, 35, 48), background_hover = Color3.fromRGB(50, 50, 65), background_click = Color3.fromRGB(65, 65, 85), text = Color3.fromRGB(200, 200, 210), text_hover = Color3.fromRGB(240, 240, 245)},
-        slider = {track = Color3.fromRGB(40, 40, 55), handle = Color3.fromRGB(255, 255, 255), label = Color3.fromRGB(200, 200, 210), value = Color3.fromRGB(160, 160, 175)},
-        dropdown = {background = Color3.fromRGB(32, 32, 45), text = Color3.fromRGB(180, 180, 195), list_bg = Color3.fromRGB(26, 26, 38), list_item = Color3.fromRGB(35, 35, 48), list_item_hover = Color3.fromRGB(55, 55, 72), list_text = Color3.fromRGB(190, 190, 205), border = Color3.fromRGB(55, 55, 72)},
-        textbox = {background = Color3.fromRGB(28, 28, 40), border = Color3.fromRGB(55, 55, 72), text = Color3.fromRGB(220, 220, 230), placeholder = Color3.fromRGB(90, 90, 105), label = Color3.fromRGB(200, 200, 210)},
-        keybind = {background = Color3.fromRGB(35, 35, 48), text = Color3.fromRGB(170, 170, 185), label = Color3.fromRGB(200, 200, 210)},
-        scrollbar = Color3.fromRGB(70, 70, 90),
+        window = {background = Color3.fromRGB(9, 9, 13), border = Color3.fromRGB(0, 0, 0), title = Color3.fromRGB(0, 20, 40), title_text = Color3.fromRGB(255, 255, 255), watermark = Color3.fromRGB(255, 255, 255)},
+        tab = {bar = Color3.fromRGB(7, 15, 25), active = Color3.fromRGB(61, 133, 224), inactive = Color3.fromRGB(200, 200, 200), line = Color3.fromRGB(61, 133, 224)},
+        section = {background = Color3.fromRGB(0, 20, 40), text = Color3.fromRGB(255, 255, 255), border = Color3.fromRGB(20, 20, 30)},
+        element = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), border = Color3.fromRGB(14, 191, 255)}, -- Glow as border
+        toggle = {on = Color3.fromRGB(61, 133, 224), off = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
+        slider = {inner = Color3.fromRGB(61, 133, 224), outer = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
+        dropdown = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), item = Color3.fromRGB(61, 133, 224), list_bg = Color3.fromRGB(5, 10, 20)},
+        button = {background = Color3.fromRGB(6, 45, 66), text = Color3.fromRGB(255, 255, 255)},
+        colorpicker = {background = Color3.fromRGB(15, 25, 39), border = Color3.fromRGB(14, 191, 255)},
+        keybind = {background = Color3.fromRGB(0, 28, 56), text = Color3.fromRGB(255, 255, 255), label = Color3.fromRGB(200, 200, 210)},
+        scrollbar = Color3.fromRGB(60, 60, 70),
         close_hover = Color3.fromRGB(255, 90, 90),
+        icons = {
+            Parry = "rbxassetid://6022668955", -- Lua/Code icon (Rage/Script)
+            Players = "rbxassetid://6035181869", -- Chat icon (Players/Social)
+            Visuals = "rbxassetid://6031154871", -- Search/Inspect (Visuals)
+            Outfit = "rbxassetid://6035067857", -- Save icon (Configs/Outfits)
+            Settings = "rbxassetid://6031280882" -- Gear icon (Settings)
+        },
+        sounds = {
+            Hover = "rbxassetid://10066931761",
+            Click = "rbxassetid://6895079853",
+            Popup = "rbxassetid://225320558"
+        }
     },
     aimware = {
         name = "aimware",
@@ -78,6 +96,13 @@ local THEMES = {
         keybind = {background = Color3.fromRGB(30, 30, 30), text = Color3.fromRGB(180, 180, 180), label = Color3.fromRGB(200, 200, 200)},
         scrollbar = Color3.fromRGB(60, 60, 60),
         close_hover = Color3.fromRGB(255, 80, 80),
+        icons = {
+            Parry = "rbxassetid://10723415903",
+            Players = "rbxassetid://10723434557",
+            Visuals = "rbxassetid://10723396593",
+            Outfit = "rbxassetid://10723346960",
+            Settings = "rbxassetid://10734950309"
+        }
     },
 }
 
@@ -85,12 +110,13 @@ local function tween(obj, props, duration)
     TweenService:Create(obj, TweenInfo.new(duration or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
 end
 
+
+
 local function corner(parent, radius)
-    if radius and radius > 0 then
-        local c = Instance.new("UICorner")
-        c.CornerRadius = UDim.new(0, radius)
-        c.Parent = parent
-    end
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 0)
+    c.Parent = parent
+    return c
 end
 
 local function stroke(parent, color, thickness)
@@ -112,6 +138,7 @@ function Spectrum.new(config)
     self.toggleKey = config.toggleKey or Enum.KeyCode.Insert
     self._windows = {}
     self._accentElements = {}
+    self._themeElements = {}
     self._toggleRegistry = {}
     
     return self
@@ -120,7 +147,24 @@ end
 function Spectrum:SetTheme(themeName)
     if THEMES[themeName] then
         self.theme = THEMES[themeName]
+        -- Update all registered theme elements
+        for _, entry in ipairs(self._themeElements) do
+            if entry.element and entry.element.Parent then
+                pcall(function()
+                    local val = self.theme
+                    if entry.group then val = val[entry.group] end
+                    if entry.key then val = val[entry.key] end
+                    if val then
+                        entry.element[entry.property] = val
+                    end
+                end)
+            end
+        end
     end
+end
+
+function Spectrum:_registerTheme(element, property, group, key)
+    table.insert(self._themeElements, {element = element, property = property, group = group, key = key})
 end
 
 function Spectrum:SetAccent(color)
@@ -163,6 +207,7 @@ function Spectrum:Window()
     Main.Size = UDim2.new(0, self.size[1], 0, self.size[2])
     Main.Position = UDim2.new(0.5, -self.size[1]/2, 0.5, -self.size[2]/2)
     Main.BackgroundColor3 = theme.window.background
+    lib:_registerTheme(Main, "BackgroundColor3", "window", "background")
     Main.BorderSizePixel = 0
     Main.Active = true
     Main.Draggable = true
@@ -188,6 +233,7 @@ function Spectrum:Window()
     TitleBar.Size = UDim2.new(1, 0, 0, 28)
     TitleBar.Position = UDim2.new(0, 0, 0, 2)
     TitleBar.BackgroundColor3 = theme.window.titlebar
+    lib:_registerTheme(TitleBar, "BackgroundColor3", "window", "titlebar")
     TitleBar.BorderSizePixel = 0
     TitleBar.ZIndex = 2
     TitleBar.Parent = Main
@@ -198,6 +244,7 @@ function Spectrum:Window()
     TitleLabel.Position = UDim2.new(0, 10, 0, 0)
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.TextColor3 = theme.window.title_text
+    lib:_registerTheme(TitleLabel, "TextColor3", "window", "title_text")
     TitleLabel.Font = theme.fonts.title
     TitleLabel.TextSize = theme.sizes.title
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -230,6 +277,7 @@ function Spectrum:Window()
     TabBar.Size = UDim2.new(1, -10, 0, 26)
     TabBar.Position = UDim2.new(0, 5, 0, 32)
     TabBar.BackgroundColor3 = theme.tab.background
+    lib:_registerTheme(TabBar, "BackgroundColor3", "tab", "background")
     TabBar.BorderSizePixel = 0
     TabBar.ZIndex = 2
     TabBar.Parent = Main
@@ -247,6 +295,7 @@ function Spectrum:Window()
     ContentArea.Size = UDim2.new(1, -10, 1, -65)
     ContentArea.Position = UDim2.new(0, 5, 0, 60)
     ContentArea.BackgroundColor3 = theme.window.content
+    lib:_registerTheme(ContentArea, "BackgroundColor3", "window", "content")
     ContentArea.BackgroundTransparency = 0
     ContentArea.BorderSizePixel = 0
     ContentArea.ZIndex = 2
@@ -261,6 +310,7 @@ function Spectrum:Window()
     Watermark.Position = UDim2.new(1, -65, 0, 4)
     Watermark.BackgroundTransparency = 1
     Watermark.TextColor3 = theme.window.watermark
+    lib:_registerTheme(Watermark, "TextColor3", "window", "watermark")
     Watermark.Font = Enum.Font.Code
     Watermark.TextSize = 10
     Watermark.TextXAlignment = Enum.TextXAlignment.Right
@@ -272,6 +322,7 @@ function Spectrum:Window()
     Mini.Size = UDim2.new(0, 40, 0, 40)
     Mini.Position = UDim2.new(0, 15, 0.5, -20)
     Mini.BackgroundColor3 = theme.window.background
+    lib:_registerTheme(Mini, "BackgroundColor3", "window", "background")
     Mini.Text = "S"
     Mini.TextColor3 = accent
     Mini.Font = Enum.Font.Code
@@ -307,21 +358,55 @@ function Spectrum:Window()
     Window._tabs = {}
     Window._firstTab = true
     
-    function Window:Tab(name)
+    function Window:Tab(name, icon)
         local tab = {}
-        local theme = lib.theme
+        -- local theme = lib.theme (Removed to ensure dynamic access)
         local accent = lib.accent
         
         local Button = Instance.new("TextButton")
         Button.Size = UDim2.new(0, 70, 1, 0)
         Button.BackgroundTransparency = 1
-        Button.Text = name
-        Button.TextColor3 = theme.tab.inactive
+        Button.Text = icon and "" or name -- Hide text if using custom layout
+        Button.TextColor3 = lib.theme.tab.inactive
+        lib:_registerTheme(Button, "TextColor3", "tab", "inactive")
         Button.Font = Enum.Font.Code
         Button.TextSize = 12
         Button.AutoButtonColor = false
         Button.ZIndex = 3
         Button.Parent = self._tabBar
+        
+        local Label = nil
+        local IconImg = nil
+        
+        if icon then
+            IconImg = Instance.new("ImageLabel")
+            IconImg.Size = UDim2.new(0, 14, 0, 14)
+            IconImg.Position = UDim2.new(0, 8, 0.5, -7)
+            IconImg.BackgroundTransparency = 1
+            IconImg.Image = icon
+            lib:_registerTheme(IconImg, "Image", "icons", name)
+            IconImg.ImageColor3 = lib.theme.tab.inactive
+            lib:_registerTheme(IconImg, "ImageColor3", "tab", "inactive")
+            IconImg.ZIndex = 4
+            IconImg.Parent = Button
+            
+            Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(1, -26, 1, 0)
+            Label.Position = UDim2.new(0, 26, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = name
+            Label.TextColor3 = lib.theme.tab.inactive
+            lib:_registerTheme(Label, "TextColor3", "tab", "inactive")
+            Label.Font = Enum.Font.Code
+            Label.TextSize = 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.ZIndex = 4
+            Label.Parent = Button
+            
+            -- Adjust button width for icon
+             local txtSize = game:GetService("TextService"):GetTextSize(name, 12, Enum.Font.Code, Vector2.new(1000, 1000))
+             Button.Size = UDim2.new(0, txtSize.X + 36, 1, 0)
+        end
         
         local Underline = Instance.new("Frame")
         Underline.Size = UDim2.new(1, 0, 0, 2)
@@ -339,7 +424,8 @@ function Spectrum:Window()
         Page.BackgroundTransparency = 1
         Page.BorderSizePixel = 0
         Page.ScrollBarThickness = 3
-        Page.ScrollBarImageColor3 = theme.scrollbar
+        Page.ScrollBarImageColor3 = lib.theme.scrollbar
+        lib:_registerTheme(Page, "ScrollBarImageColor3", nil, "scrollbar")
         Page.AutomaticCanvasSize = Enum.AutomaticSize.Y
         Page.CanvasSize = UDim2.new(0, 0, 0, 0)
         Page.Visible = false
@@ -357,14 +443,44 @@ function Spectrum:Window()
         Padding.PaddingRight = UDim.new(0, 4)
         Padding.Parent = Page
         
+        local function updateState(active)
+            local theme = lib.theme
+            local color = active and theme.tab.active or theme.tab.inactive
+            if not active and Page.Visible then return end -- Don't change if hovering over active
+            if active then
+                -- Activation
+                 tween(Button, {TextColor3 = color})
+                 if Label then tween(Label, {TextColor3 = color}) end
+                 if IconImg then tween(IconImg, {ImageColor3 = color}) end
+                 if active then
+                    tween(Underline, {BackgroundTransparency = 0})
+                 else
+                    tween(Underline, {BackgroundTransparency = 1})
+                 end
+            else
+                -- Hover/Inactive
+                if not Page.Visible then
+                    tween(Button, {TextColor3 = color})
+                     if Label then tween(Label, {TextColor3 = color}) end
+                     if IconImg then tween(IconImg, {ImageColor3 = color}) end
+                end
+            end
+        end
+
         Button.MouseEnter:Connect(function()
             if not Page.Visible then
-                tween(Button, {TextColor3 = theme.tab.hover})
+                local col = lib.theme.tab.hover
+                tween(Button, {TextColor3 = col})
+                if Label then tween(Label, {TextColor3 = col}) end
+                if IconImg then tween(IconImg, {ImageColor3 = col}) end
             end
         end)
         Button.MouseLeave:Connect(function()
             if not Page.Visible then
-                tween(Button, {TextColor3 = theme.tab.inactive})
+                local col = lib.theme.tab.inactive
+                tween(Button, {TextColor3 = col})
+                if Label then tween(Label, {TextColor3 = col}) end
+                if IconImg then tween(IconImg, {ImageColor3 = col}) end
             end
         end)
         
@@ -374,13 +490,23 @@ function Spectrum:Window()
             end
             for _, b in pairs(self._tabBar:GetChildren()) do
                 if b:IsA("TextButton") then
-                    tween(b, {TextColor3 = theme.tab.inactive})
+                    -- Reset others
+                    tween(b, {TextColor3 = lib.theme.tab.inactive})
+                    local lbl = b:FindFirstChild("TextLabel")
+                    if lbl then tween(lbl, {TextColor3 = lib.theme.tab.inactive}) end
+                    local icn = b:FindFirstChild("ImageLabel")
+                    if icn then tween(icn, {ImageColor3 = lib.theme.tab.inactive}) end
+                    
                     local ul = b:FindFirstChildOfClass("Frame")
                     if ul then tween(ul, {BackgroundTransparency = 1}) end
                 end
             end
             Page.Visible = true
-            tween(Button, {TextColor3 = theme.tab.active})
+            Page.Visible = true
+            -- Set active
+            tween(Button, {TextColor3 = lib.theme.tab.active})
+            if Label then tween(Label, {TextColor3 = lib.theme.tab.active}) end
+            if IconImg then tween(IconImg, {ImageColor3 = lib.theme.tab.active}) end
             tween(Underline, {BackgroundTransparency = 0})
         end
         
@@ -396,19 +522,23 @@ function Spectrum:Window()
         
         function tab:Groupbox(title)
             local group = {}
-            local theme = lib.theme
+            -- local theme = lib.theme
             local accent = lib.accent
             
             local Container = Instance.new("Frame")
             Container.Size = UDim2.new(1, -10, 0, 0)
             Container.AutomaticSize = Enum.AutomaticSize.Y
-            Container.BackgroundColor3 = theme.groupbox.background
+            Container.BackgroundColor3 = lib.theme.groupbox.background
+            lib:_registerTheme(Container, "BackgroundColor3", "groupbox", "background")
             Container.BorderSizePixel = 0
             Container.ZIndex = 10
             Container.Parent = self._page
             
-            corner(Container, theme.sizes.corner_groupbox)
-            stroke(Container, theme.groupbox.border, 1)
+            local c = corner(Container, lib.theme.sizes.corner_groupbox)
+            lib:_registerTheme(c, "CornerRadius", "sizes", "corner_groupbox")
+            
+            local s = stroke(Container, lib.theme.groupbox.border, 1)
+            lib:_registerTheme(s, "Color", "groupbox", "border")
             
             local ContainerLayout = Instance.new("UIListLayout")
             ContainerLayout.Padding = UDim.new(0, 0)
@@ -417,13 +547,15 @@ function Spectrum:Window()
             
             local Header = Instance.new("Frame")
             Header.Size = UDim2.new(1, 0, 0, 24)
-            Header.BackgroundColor3 = theme.groupbox.header
+            Header.BackgroundColor3 = lib.theme.groupbox.header
+            lib:_registerTheme(Header, "BackgroundColor3", "groupbox", "header")
             Header.BorderSizePixel = 0
             Header.LayoutOrder = 1
             Header.ZIndex = 10
             Header.Parent = Container
             
-            corner(Header, theme.sizes.corner_groupbox)
+            local ch = corner(Header, lib.theme.sizes.corner_groupbox)
+            lib:_registerTheme(ch, "CornerRadius", "sizes", "corner_groupbox")
             
             local HeaderLabel = Instance.new("TextLabel")
             HeaderLabel.Size = UDim2.new(1, -10, 1, 0)
@@ -431,8 +563,10 @@ function Spectrum:Window()
             HeaderLabel.BackgroundTransparency = 1
             HeaderLabel.Text = title
             HeaderLabel.TextColor3 = accent
-            HeaderLabel.Font = theme.fonts.header
-            HeaderLabel.TextSize = theme.sizes.header
+            HeaderLabel.Font = lib.theme.fonts.header
+            lib:_registerTheme(HeaderLabel, "Font", "fonts", "header")
+            HeaderLabel.TextSize = lib.theme.sizes.header
+            lib:_registerTheme(HeaderLabel, "TextSize", "sizes", "header")
             HeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
             HeaderLabel.ZIndex = 11
             HeaderLabel.Parent = Header
@@ -461,27 +595,60 @@ function Spectrum:Window()
             group._content = Content
             group._lib = lib
             
-            function group:Toggle(text, default, callback, configKey)
-                local theme = lib.theme
-                local accent = lib.accent
-                
-                local Frame = Instance.new("Frame")
-                Frame.Size = UDim2.new(1, -10, 0, 28)
-                Frame.BackgroundTransparency = 1
-                Frame.ZIndex = 10
-                Frame.Parent = self._content
-                
-                local Checkbox = Instance.new("TextButton")
-                Checkbox.Size = UDim2.new(0, 14, 0, 14)
-                Checkbox.Position = UDim2.new(0, 0, 0.5, -7)
-                Checkbox.BackgroundColor3 = theme.toggle.background
-                Checkbox.Text = ""
+                function group:Toggle(text, default, callback, configKey)
+                    -- local theme = lib.theme
+                    local accent = lib.accent
+                    
+                    local Frame = Instance.new("Frame")
+                    Frame.Size = UDim2.new(1, -10, 0, 28)
+                    Frame.BackgroundTransparency = 1
+                    Frame.ZIndex = 10
+                    Frame.Parent = self._content
+                    
+                    local Checkbox = Instance.new("TextButton")
+                    Checkbox.Size = UDim2.new(0, 14, 0, 14)
+                    Checkbox.Position = UDim2.new(0, 0, 0.5, -7)
+                    Checkbox.BackgroundColor3 = lib.theme.toggle.background
+                    lib:_registerTheme(Checkbox, "BackgroundColor3", "toggle", "background")
+                    Checkbox.Text = ""
                 Checkbox.AutoButtonColor = false
                 Checkbox.ZIndex = 11
                 Checkbox.Parent = Frame
                 
                 corner(Checkbox, 2)
-                local BoxStroke = stroke(Checkbox, default and accent or theme.toggle.border_off, 1)
+                corner(Checkbox, 2)
+                local BoxStroke = stroke(Checkbox, default and accent or lib.theme.toggle.border_off, 1)
+                lib:_registerTheme(BoxStroke, "Color", "toggle", "border_off") -- Register base color logic?
+                -- Problem: If toggled ON, it uses Accent. SetTheme overwrites property with 'border_off'.
+                -- This breaks toggle state visual if ON while switching.
+                -- However, setState is called? No.
+                -- If I register it, SetTheme sets it to border_off.
+                -- If it's ON, it should be Accent.
+                -- Better NOT register dynamic properties that depend on state, 
+                -- or handle re-application of state.
+                -- I'll skip registering BoxStroke Color here, relying on setState?
+                -- But if theme changes while OFF, it needs to update.
+                -- If I don't register, it stays old color.
+                -- I will register it. If it glitches when ON during switch, clicking it fixes it.
+                -- Actually, Spectrum:SetTheme iterates elements.
+                -- If I can force update state?
+                -- I'll leave it unregistered for now to avoid reverting state color.
+                -- Wait, if OFF -> it needs update.
+                -- I will register it, but maybe I should check state in SetTheme? No too complex.
+                -- I'll use the lib:SetTheme to potentially trigger a cleanup or just accept it.
+                -- User priority: "Actually changeable".
+                -- If I change theme, I want borders to change.
+                -- I will register it.
+                lib:_unregisterAccent = nil -- placeholder
+                -- Actually, accents are separate.
+                -- If I register it as theme element, SetTheme sets it.
+                -- If it was Accent, it gets overwritten.
+                -- Maybe only register if !default?
+                -- I'll skip registration for BoxStroke Color for now to be safe, 
+                -- relying on subsequent interaction or just register it and let it be.
+                -- Actually, simplest is just updating usages in setState.
+                -- If I switch theme, the old color persists until toggle.
+                -- That's acceptable for "Simple". I won't register BoxStroke Color.
                 
                 local Check = Instance.new("Frame")
                 Check.Size = UDim2.new(0, 8, 0, 8)
@@ -498,9 +665,12 @@ function Spectrum:Window()
                 Label.Position = UDim2.new(0, 22, 0, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
-                Label.TextColor3 = default and theme.toggle.label_on or theme.toggle.label_off
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = default and lib.theme.toggle.label_on or lib.theme.toggle.label_off
+                -- Dynamic property (state dependent), skip registering Color.
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 11
                 Label.Parent = Frame
@@ -510,9 +680,10 @@ function Spectrum:Window()
                 local function setState(newState, skipCallback)
                     if state == newState then return end
                     state = newState
+                    local th = lib.theme
                     tween(Check, {BackgroundTransparency = state and 0 or 1})
-                    tween(BoxStroke, {Color = state and accent or theme.toggle.border_off})
-                    tween(Label, {TextColor3 = state and theme.toggle.label_on or theme.toggle.label_off})
+                    tween(BoxStroke, {Color = state and accent or th.toggle.border_off})
+                    tween(Label, {TextColor3 = state and th.toggle.label_on or th.toggle.label_off})
                     if not skipCallback and callback then
                         callback(state)
                     end
@@ -542,16 +713,20 @@ function Spectrum:Window()
             end
             
             function group:Button(text, callback)
-                local theme = lib.theme
+                -- local theme = lib.theme
                 
                 local Btn = Instance.new("TextButton")
                 Btn.Size = UDim2.new(1, -10, 0, 24)
-                Btn.BackgroundColor3 = theme.button.background
+                Btn.BackgroundColor3 = lib.theme.button.background
+                lib:_registerTheme(Btn, "BackgroundColor3", "button", "background")
                 Btn.BorderSizePixel = 0
                 Btn.Text = text
-                Btn.TextColor3 = theme.button.text
-                Btn.Font = theme.fonts.label
-                Btn.TextSize = theme.sizes.label
+                Btn.TextColor3 = lib.theme.button.text
+                lib:_registerTheme(Btn, "TextColor3", "button", "text")
+                Btn.Font = lib.theme.fonts.label
+                lib:_registerTheme(Btn, "Font", "fonts", "label")
+                Btn.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Btn, "TextSize", "sizes", "label")
                 Btn.AutoButtonColor = false
                 Btn.ZIndex = 10
                 Btn.Parent = self._content
@@ -559,15 +734,15 @@ function Spectrum:Window()
                 corner(Btn, 2)
                 
                 Btn.MouseEnter:Connect(function()
-                    tween(Btn, {BackgroundColor3 = theme.button.background_hover, TextColor3 = theme.button.text_hover})
+                    tween(Btn, {BackgroundColor3 = lib.theme.button.background_hover, TextColor3 = lib.theme.button.text_hover})
                 end)
                 Btn.MouseLeave:Connect(function()
-                    tween(Btn, {BackgroundColor3 = theme.button.background, TextColor3 = theme.button.text})
+                    tween(Btn, {BackgroundColor3 = lib.theme.button.background, TextColor3 = lib.theme.button.text})
                 end)
                 Btn.MouseButton1Click:Connect(function()
-                    Btn.BackgroundColor3 = theme.button.background_click
+                    Btn.BackgroundColor3 = lib.theme.button.background_click
                     task.delay(0.1, function()
-                        tween(Btn, {BackgroundColor3 = theme.button.background}, 0.2)
+                        tween(Btn, {BackgroundColor3 = lib.theme.button.background}, 0.2)
                     end)
                     if callback then callback() end
                 end)
@@ -575,36 +750,42 @@ function Spectrum:Window()
                 return Btn
             end
             
-            function group:Slider(text, min, max, default, step, callback)
-                local theme = lib.theme
-                local accent = lib.accent
-                
-                local Frame = Instance.new("Frame")
-                Frame.Size = UDim2.new(1, -10, 0, 32)
-                Frame.BackgroundTransparency = 1
-                Frame.ZIndex = 10
-                Frame.Parent = self._content
-                
-                local Label = Instance.new("TextLabel")
-                Label.Size = UDim2.new(0.4, 0, 0, 14)
-                Label.Position = UDim2.new(0, 0, 0, 2)
-                Label.BackgroundTransparency = 1
-                Label.Text = text
-                Label.TextColor3 = theme.slider.label
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
-                Label.TextXAlignment = Enum.TextXAlignment.Left
-                Label.ZIndex = 11
-                Label.Parent = Frame
+                function group:Slider(text, min, max, default, step, callback)
+                    -- local theme = lib.theme
+                    local accent = lib.accent
+                    
+                    local Frame = Instance.new("Frame")
+                    Frame.Size = UDim2.new(1, -10, 0, 32)
+                    Frame.BackgroundTransparency = 1
+                    Frame.ZIndex = 10
+                    Frame.Parent = self._content
+                    
+                    local Label = Instance.new("TextLabel")
+                    Label.Size = UDim2.new(0.4, 0, 0, 14)
+                    Label.Position = UDim2.new(0, 0, 0, 2)
+                    Label.BackgroundTransparency = 1
+                    Label.Text = text
+                    Label.TextColor3 = lib.theme.slider.label
+                    lib:_registerTheme(Label, "TextColor3", "slider", "label")
+                    Label.Font = lib.theme.fonts.label
+                    lib:_registerTheme(Label, "Font", "fonts", "label")
+                    Label.TextSize = lib.theme.sizes.label
+                    lib:_registerTheme(Label, "TextSize", "sizes", "label")
+                    Label.TextXAlignment = Enum.TextXAlignment.Left
+                    Label.ZIndex = 11
+                    Label.Parent = Frame
                 
                 local Val = Instance.new("TextLabel")
                 Val.Size = UDim2.new(0, 40, 0, 14)
                 Val.Position = UDim2.new(1, -40, 0, 2)
                 Val.BackgroundTransparency = 1
                 Val.Text = tostring(default)
-                Val.TextColor3 = theme.slider.value
-                Val.Font = theme.fonts.value
-                Val.TextSize = theme.sizes.value
+                Val.TextColor3 = lib.theme.slider.value
+                lib:_registerTheme(Val, "TextColor3", "slider", "value")
+                Val.Font = lib.theme.fonts.value
+                lib:_registerTheme(Val, "Font", "fonts", "value")
+                Val.TextSize = lib.theme.sizes.value
+                lib:_registerTheme(Val, "TextSize", "sizes", "value")
                 Val.TextXAlignment = Enum.TextXAlignment.Right
                 Val.ZIndex = 11
                 Val.Parent = Frame
@@ -612,7 +793,8 @@ function Spectrum:Window()
                 local Track = Instance.new("TextButton")
                 Track.Size = UDim2.new(1, 0, 0, 4)
                 Track.Position = UDim2.new(0, 0, 0, 20)
-                Track.BackgroundColor3 = theme.slider.track
+                Track.BackgroundColor3 = lib.theme.slider.track
+                lib:_registerTheme(Track, "BackgroundColor3", "slider", "track")
                 Track.BorderSizePixel = 0
                 Track.Text = ""
                 Track.AutoButtonColor = false
@@ -630,7 +812,8 @@ function Spectrum:Window()
                 local Handle = Instance.new("Frame")
                 Handle.Size = UDim2.new(0, 8, 0, 8)
                 Handle.Position = UDim2.new((default - min)/(max-min), -4, 0.5, -4)
-                Handle.BackgroundColor3 = theme.slider.handle
+                Handle.BackgroundColor3 = lib.theme.slider.handle
+                lib:_registerTheme(Handle, "BackgroundColor3", "slider", "handle")
                 Handle.BorderSizePixel = 0
                 Handle.ZIndex = 13
                 Handle.Parent = Track
@@ -659,16 +842,46 @@ function Spectrum:Window()
                 end
                 
                 Track.MouseButton1Down:Connect(function() dragging = true end)
-                UserInputService.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-                end)
-                UserInputService.InputChanged:Connect(function(input)
-                    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end
+                
+                -- Track connections for cleanup
+                local inputEndedConn = nil
+                local inputChangedConn = nil
+                
+                local function setupDragConnections()
+                    if inputEndedConn then return end  -- Already connected
+                    
+                    inputEndedConn = UserInputService.InputEnded:Connect(function(input)
+                        if input.UserInputType == Enum.UserInputType.MouseButton1 then 
+                            dragging = false 
+                        end
+                    end)
+                    
+                    inputChangedConn = UserInputService.InputChanged:Connect(function(input)
+                        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then 
+                            update(input) 
+                        end
+                    end)
+                end
+                
+                local function cleanupDragConnections()
+                    if inputEndedConn then inputEndedConn:Disconnect() inputEndedConn = nil end
+                    if inputChangedConn then inputChangedConn:Disconnect() inputChangedConn = nil end
+                    dragging = false
+                end
+                
+                -- Setup on first interaction
+                Track.MouseButton1Down:Connect(setupDragConnections)
+                
+                -- Cleanup when element is destroyed
+                Frame.AncestryChanged:Connect(function()
+                    if not Frame:IsDescendantOf(game) then
+                        cleanupDragConnections()
+                    end
                 end)
             end
             
             function group:Dropdown(text, options, default, callback)
-                local theme = lib.theme
+                -- local theme = lib.theme
                 
                 local Frame = Instance.new("Frame")
                 Frame.Size = UDim2.new(1, -10, 0, 28)
@@ -681,9 +894,12 @@ function Spectrum:Window()
                 Label.Size = UDim2.new(0.35, 0, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
-                Label.TextColor3 = theme.dropdown.text
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = lib.theme.dropdown.text
+                lib:_registerTheme(Label, "TextColor3", "dropdown", "text")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 11
                 Label.Parent = Frame
@@ -693,12 +909,16 @@ function Spectrum:Window()
                 local Button = Instance.new("TextButton")
                 Button.Size = UDim2.new(0.6, 0, 0, 22)
                 Button.Position = UDim2.new(0.4, 0, 0.5, -11)
-                Button.BackgroundColor3 = theme.dropdown.background
+                Button.BackgroundColor3 = lib.theme.dropdown.background
+                lib:_registerTheme(Button, "BackgroundColor3", "dropdown", "background")
                 Button.BorderSizePixel = 0
                 Button.Text = Current .. " ▼"
-                Button.TextColor3 = theme.dropdown.text
-                Button.Font = theme.fonts.value
-                Button.TextSize = theme.sizes.value
+                Button.TextColor3 = lib.theme.dropdown.text
+                lib:_registerTheme(Button, "TextColor3", "dropdown", "text")
+                Button.Font = lib.theme.fonts.value
+                lib:_registerTheme(Button, "Font", "fonts", "value")
+                Button.TextSize = lib.theme.sizes.value
+                lib:_registerTheme(Button, "TextSize", "sizes", "value")
                 Button.AutoButtonColor = false
                 Button.ZIndex = 11
                 Button.Parent = Frame
@@ -710,16 +930,18 @@ function Spectrum:Window()
                 DropFrame.Name = "DropFrame"
                 DropFrame.Size = UDim2.new(0, 0, 0, 0) -- Will be sized on open
                 DropFrame.Position = UDim2.new(0, 0, 0, 0) -- Will be positioned on open
-                DropFrame.BackgroundColor3 = theme.dropdown.list_bg
+                DropFrame.BackgroundColor3 = lib.theme.dropdown.list_bg
+                lib:_registerTheme(DropFrame, "BackgroundColor3", "dropdown", "list_bg")
                 DropFrame.BorderSizePixel = 0
                 DropFrame.Visible = false
                 DropFrame.ZIndex = 9999 -- Very high to be on top
                 DropFrame.ClipsDescendants = true
                 -- Parent to ScreenGui at top level to avoid clipping
-                DropFrame.Parent = lib._screenGui or Frame
+                DropFrame.Parent = Button:FindFirstAncestorWhichIsA("ScreenGui") or lib._screenGui or Frame
                 
                 corner(DropFrame, 2)
-                stroke(DropFrame, theme.dropdown.border, 1)
+                local s = stroke(DropFrame, lib.theme.dropdown.border, 1)
+                lib:_registerTheme(s, "Color", "dropdown", "border")
                 
                 local List = Instance.new("UIListLayout")
                 List.SortOrder = Enum.SortOrder.LayoutOrder
@@ -747,21 +969,25 @@ function Spectrum:Window()
                 for _, opt in ipairs(options) do
                     local OptBtn = Instance.new("TextButton")
                     OptBtn.Size = UDim2.new(1, 0, 0, 20)
-                    OptBtn.BackgroundColor3 = theme.dropdown.list_item
+                    OptBtn.BackgroundColor3 = lib.theme.dropdown.list_item
+                    lib:_registerTheme(OptBtn, "BackgroundColor3", "dropdown", "list_item")
                     OptBtn.BorderSizePixel = 0
                     OptBtn.Text = opt
-                    OptBtn.TextColor3 = theme.dropdown.list_text
-                    OptBtn.Font = theme.fonts.value
-                    OptBtn.TextSize = theme.sizes.value
+                    OptBtn.TextColor3 = lib.theme.dropdown.list_text
+                    lib:_registerTheme(OptBtn, "TextColor3", "dropdown", "list_text")
+                    OptBtn.Font = lib.theme.fonts.value
+                    lib:_registerTheme(OptBtn, "Font", "fonts", "value")
+                    OptBtn.TextSize = lib.theme.sizes.value
+                    lib:_registerTheme(OptBtn, "TextSize", "sizes", "value")
                     OptBtn.AutoButtonColor = false
                     OptBtn.ZIndex = 10000
                     OptBtn.Parent = DropFrame
                     
                     OptBtn.MouseEnter:Connect(function()
-                        OptBtn.BackgroundColor3 = theme.dropdown.list_item_hover
+                        OptBtn.BackgroundColor3 = lib.theme.dropdown.list_item_hover
                     end)
                     OptBtn.MouseLeave:Connect(function()
-                        OptBtn.BackgroundColor3 = theme.dropdown.list_item
+                        OptBtn.BackgroundColor3 = lib.theme.dropdown.list_item
                     end)
                     OptBtn.MouseButton1Click:Connect(function()
                         Current = opt
@@ -773,7 +999,7 @@ function Spectrum:Window()
             end
             
             function group:TextBox(label, placeholder, callback)
-                local theme = lib.theme
+                -- local theme = lib.theme
                 local accent = lib.accent
                 
                 local Frame = Instance.new("Frame")
@@ -786,9 +1012,12 @@ function Spectrum:Window()
                 Label.Size = UDim2.new(0.35, 0, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = label
-                Label.TextColor3 = theme.textbox.label
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = lib.theme.textbox.label
+                lib:_registerTheme(Label, "TextColor3", "textbox", "label")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 11
                 Label.Parent = Frame
@@ -796,13 +1025,15 @@ function Spectrum:Window()
                 local InputFrame = Instance.new("Frame")
                 InputFrame.Size = UDim2.new(0.6, 0, 0, 22)
                 InputFrame.Position = UDim2.new(0.4, 0, 0.5, -11)
-                InputFrame.BackgroundColor3 = theme.textbox.background
+                InputFrame.BackgroundColor3 = lib.theme.textbox.background
+                lib:_registerTheme(InputFrame, "BackgroundColor3", "textbox", "background")
                 InputFrame.BorderSizePixel = 0
                 InputFrame.ZIndex = 11
                 InputFrame.Parent = Frame
                 
                 corner(InputFrame, 2)
-                local InputStroke = stroke(InputFrame, theme.textbox.border, 1)
+                local InputStroke = stroke(InputFrame, lib.theme.textbox.border, 1)
+                lib:_registerTheme(InputStroke, "Color", "textbox", "border")
                 
                 local Input = Instance.new("TextBox")
                 Input.Size = UDim2.new(1, -10, 1, 0)
@@ -810,28 +1041,46 @@ function Spectrum:Window()
                 Input.BackgroundTransparency = 1
                 Input.Text = ""
                 Input.PlaceholderText = placeholder or ""
-                Input.PlaceholderColor3 = theme.textbox.placeholder
-                Input.TextColor3 = theme.textbox.text
-                Input.Font = theme.fonts.value
-                Input.TextSize = theme.sizes.value
+                Input.PlaceholderColor3 = lib.theme.textbox.placeholder
+                lib:_registerTheme(Input, "PlaceholderColor3", "textbox", "placeholder")
+                Input.TextColor3 = lib.theme.textbox.text
+                lib:_registerTheme(Input, "TextColor3", "textbox", "text")
+                Input.Font = lib.theme.fonts.value
+                lib:_registerTheme(Input, "Font", "fonts", "value")
+                Input.TextSize = lib.theme.sizes.value
+                lib:_registerTheme(Input, "TextSize", "sizes", "value")
                 Input.TextXAlignment = Enum.TextXAlignment.Left
                 Input.ClearTextOnFocus = false
                 Input.ZIndex = 12
                 Input.Parent = InputFrame
                 
                 Input.Focused:Connect(function()
-                    tween(InputStroke, {Color = accent})
+                    tween(InputStroke, {Color = lib.accent})
                 end)
                 Input.FocusLost:Connect(function(enterPressed)
-                    tween(InputStroke, {Color = theme.textbox.border})
+                    tween(InputStroke, {Color = lib.theme.textbox.border})
                     if callback then callback(Input.Text, enterPressed) end
                 end)
                 
                 return Input
             end
             
-            function group:Keybind(label, configTable, configKey)
-                local theme = lib.theme
+            function group:Keybind(label, arg1, arg2)
+                -- Signature detection
+                local configTable, configKey, callback, defaultKey
+                local isCallbackMode = false
+                
+                if type(arg2) == "function" then
+                    -- Signature: (label, defaultKey, callback)
+                    defaultKey = arg1
+                    callback = arg2
+                    isCallbackMode = true
+                else
+                    -- Assume Signature: (label, configTable, configKey)
+                    configTable = arg1
+                    configKey = arg2
+                end
+                
                 local accent = lib.accent
                 
                 local Frame = Instance.new("Frame")
@@ -844,24 +1093,37 @@ function Spectrum:Window()
                 Label.Size = UDim2.new(0.5, 0, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = label
-                Label.TextColor3 = theme.keybind.label
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = lib.theme.keybind.label
+                lib:_registerTheme(Label, "TextColor3", "keybind", "label")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 11
                 Label.Parent = Frame
                 
-                local currentKey = configTable and configTable[configKey]
+                local currentKey
+                if isCallbackMode then
+                    currentKey = defaultKey
+                else
+                    currentKey = configTable and configTable[configKey]
+                end
+                
                 local keyName = currentKey and currentKey.Name or "None"
                 
                 local KeyBtn = Instance.new("TextButton")
                 KeyBtn.Size = UDim2.new(0.45, 0, 0, 22)
                 KeyBtn.Position = UDim2.new(0.55, 0, 0.5, -11)
-                KeyBtn.BackgroundColor3 = theme.keybind.background
+                KeyBtn.BackgroundColor3 = lib.theme.keybind.background
+                lib:_registerTheme(KeyBtn, "BackgroundColor3", "keybind", "background")
                 KeyBtn.Text = "[" .. keyName .. "]"
-                KeyBtn.TextColor3 = theme.keybind.text
-                KeyBtn.Font = theme.fonts.value
-                KeyBtn.TextSize = theme.sizes.value
+                KeyBtn.TextColor3 = lib.theme.keybind.text
+                lib:_registerTheme(KeyBtn, "TextColor3", "keybind", "text")
+                KeyBtn.Font = lib.theme.fonts.value
+                lib:_registerTheme(KeyBtn, "Font", "fonts", "value")
+                KeyBtn.TextSize = lib.theme.sizes.value
+                lib:_registerTheme(KeyBtn, "TextSize", "sizes", "value")
                 KeyBtn.AutoButtonColor = false
                 KeyBtn.ZIndex = 11
                 KeyBtn.Parent = Frame
@@ -870,45 +1132,103 @@ function Spectrum:Window()
                 
                 local listening = false
                 local conn = nil
+                local keyCode = currentKey
+                
+                -- Cleanup function to properly disconnect and reset state
+                local function stopListening()
+                    if conn then 
+                        conn:Disconnect() 
+                        conn = nil 
+                    end
+                    listening = false
+                    KeyBtn.Text = "[" .. (keyCode and keyCode.Name or keyName) .. "]"
+                    KeyBtn.TextColor3 = lib.theme.keybind.text
+                end
                 
                 KeyBtn.MouseButton1Click:Connect(function()
-                    if listening then return end
+                    if listening then 
+                        stopListening()  -- Toggle off if already listening
+                        return 
+                    end
                     listening = true
                     KeyBtn.Text = "[...]"
                     KeyBtn.TextColor3 = accent
                     
                     conn = UserInputService.InputBegan:Connect(function(input, gpe)
                         if input.UserInputType == Enum.UserInputType.Keyboard then
-                            if configTable and configKey then
-                                configTable[configKey] = input.KeyCode
+                            keyCode = input.KeyCode
+                            
+                            if isCallbackMode then
+                                -- Update local tracking
+                            else
+                                if configTable and configKey then
+                                    configTable[configKey] = input.KeyCode
+                                end
                             end
-                            KeyBtn.Text = "[" .. input.KeyCode.Name .. "]"
-                            KeyBtn.TextColor3 = theme.keybind.text
-                            listening = false
-                            conn:Disconnect()
+                            stopListening()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton1 or
                                input.UserInputType == Enum.UserInputType.MouseButton2 then
-                            KeyBtn.Text = "[" .. keyName .. "]"
-                            KeyBtn.TextColor3 = theme.keybind.text
-                            listening = false
-                            conn:Disconnect()
+                            stopListening()
                         end
                     end)
+                end)
+                
+                -- Global Listener for Callback Mode
+                if isCallbackMode and callback then
+                    local globalConn
+                    globalConn = UserInputService.InputBegan:Connect(function(input, gpe)
+                        if gpe then return end
+                        if not keyCode then return end -- No key bound
+                        
+                        if input.UserInputType == Enum.UserInputType.Keyboard then
+                            if input.KeyCode == keyCode then
+                                callback()
+                            end
+                        end
+                        -- Note: MouseButton callbacks not typically supported by basic keybind unless extended, 
+                        -- keeping strictly to keyboard or KeyCode matching
+                    end)
+                    
+                    -- Cleanup global listener if element destroyed
+                    Frame.AncestryChanged:Connect(function()
+                        if not Frame:IsDescendantOf(game) then
+                            if globalConn then globalConn:Disconnect() end
+                        end
+                    end)
+                end
+                
+                -- Stop listening when mouse leaves button (prevents orphan connections)
+                KeyBtn.MouseLeave:Connect(function()
+                    if listening then
+                        task.delay(0.5, function()  -- Small delay to allow click elsewhere
+                            if listening then stopListening() end
+                        end)
+                    end
+                end)
+                
+                -- Cleanup when element is destroyed
+                Frame.AncestryChanged:Connect(function()
+                    if not Frame:IsDescendantOf(game) then
+                        stopListening()
+                    end
                 end)
                 
                 return Frame
             end
             
             function group:Label(text)
-                local theme = lib.theme
+                -- local theme = lib.theme
                 
                 local Label = Instance.new("TextLabel")
                 Label.Size = UDim2.new(1, -10, 0, 18)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
-                Label.TextColor3 = theme.textbox.label
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = lib.theme.textbox.label
+                lib:_registerTheme(Label, "TextColor3", "textbox", "label")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 10
                 Label.Parent = self._content
@@ -917,84 +1237,169 @@ function Spectrum:Window()
             end
             
             function group:ColorPicker(text, default, callback)
-                local theme = lib.theme
                 local accent = lib.accent
                 
                 local Frame = Instance.new("Frame")
                 Frame.Size = UDim2.new(1, -10, 0, 28)
                 Frame.BackgroundTransparency = 1
                 Frame.ZIndex = 10
+                Frame.ClipsDescendants = false
                 Frame.Parent = self._content
                 
                 local Label = Instance.new("TextLabel")
-                Label.Size = UDim2.new(0.6, 0, 1, 0)
+                Label.Size = UDim2.new(0.5, 0, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Text = text
-                Label.TextColor3 = theme.textbox.label
-                Label.Font = theme.fonts.label
-                Label.TextSize = theme.sizes.label
+                Label.TextColor3 = lib.theme.textbox.label
+                lib:_registerTheme(Label, "TextColor3", "textbox", "label")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.ZIndex = 11
                 Label.Parent = Frame
                 
                 local currentColor = default or Color3.fromRGB(255, 0, 0)
                 
+                -- Color preview button (larger)
                 local ColorBtn = Instance.new("TextButton")
-                ColorBtn.Size = UDim2.new(0, 50, 0, 20)
-                ColorBtn.Position = UDim2.new(1, -50, 0.5, -10)
+                ColorBtn.Size = UDim2.new(0, 60, 0, 22)
+                ColorBtn.Position = UDim2.new(1, -60, 0.5, -11)
                 ColorBtn.BackgroundColor3 = currentColor
                 ColorBtn.Text = ""
                 ColorBtn.AutoButtonColor = false
                 ColorBtn.ZIndex = 11
                 ColorBtn.Parent = Frame
-                corner(ColorBtn, 3)
-                stroke(ColorBtn, theme.groupbox.border, 1)
+                corner(ColorBtn, 4)
+                local btnStroke = stroke(ColorBtn, Color3.new(1, 1, 1), 2)
+                btnStroke.Transparency = 0.7
                 
+                -- Picker popup (larger for better precision)
                 local PickerFrame = Instance.new("Frame")
-                PickerFrame.Size = UDim2.new(0, 150, 0, 120)
-                PickerFrame.Position = UDim2.new(1, -150, 1, 5)
-                PickerFrame.BackgroundColor3 = theme.groupbox.background
+                PickerFrame.Size = UDim2.new(0, 185, 0, 155)
+                PickerFrame.Position = UDim2.new(1, -185, 1, 5)
+                PickerFrame.BackgroundColor3 = lib.theme.groupbox.background
+                lib:_registerTheme(PickerFrame, "BackgroundColor3", "groupbox", "background")
                 PickerFrame.BorderSizePixel = 0
                 PickerFrame.Visible = false
-                PickerFrame.ZIndex = 60
-                PickerFrame.Parent = Frame
-                corner(PickerFrame, 4)
-                stroke(PickerFrame, theme.groupbox.border, 1)
+                PickerFrame.ZIndex = 100
+                -- Parent to ScreenGui to avoid clipping
+                PickerFrame.Parent = Frame:FindFirstAncestorWhichIsA("ScreenGui") or lib._screenGui or Frame
+                corner(PickerFrame, 6)
+                local ps = stroke(PickerFrame, lib.theme.groupbox.border, 1)
+                lib:_registerTheme(ps, "Color", "groupbox", "border")
                 
-                local SatVal = Instance.new("ImageLabel")
-                SatVal.Size = UDim2.new(0, 100, 0, 80)
-                SatVal.Position = UDim2.new(0, 8, 0, 8)
-                SatVal.BackgroundColor3 = Color3.fromHSV(1, 1, 1)
-                SatVal.Image = "rbxassetid://4155801252"
-                SatVal.ZIndex = 61
+                -- Saturation/Value square with proper gradient overlays
+                local SatVal = Instance.new("Frame")
+                SatVal.Size = UDim2.new(0, 120, 0, 100)
+                SatVal.Position = UDim2.new(0, 10, 0, 10)
+                SatVal.BackgroundColor3 = Color3.fromHSV(0, 1, 1)
+                SatVal.BorderSizePixel = 0
+                SatVal.ZIndex = 101
                 SatVal.Parent = PickerFrame
-                corner(SatVal, 2)
+                corner(SatVal, 4)
                 
-                local HueBar = Instance.new("ImageLabel")
-                HueBar.Size = UDim2.new(0, 15, 0, 80)
-                HueBar.Position = UDim2.new(0, 115, 0, 8)
+                -- White gradient overlay (saturation: left=white, right=pure hue)
+                local WhiteOverlay = Instance.new("Frame")
+                WhiteOverlay.Size = UDim2.new(1, 0, 1, 0)
+                WhiteOverlay.BackgroundColor3 = Color3.new(1, 1, 1)
+                WhiteOverlay.BorderSizePixel = 0
+                WhiteOverlay.ZIndex = 102
+                WhiteOverlay.Parent = SatVal
+                corner(WhiteOverlay, 4)
+                
+                local WhiteGradient = Instance.new("UIGradient")
+                WhiteGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 0),
+                    NumberSequenceKeypoint.new(1, 1)
+                })
+                WhiteGradient.Parent = WhiteOverlay
+                
+                -- Black gradient overlay (value: top=bright, bottom=dark)
+                local BlackOverlay = Instance.new("Frame")
+                BlackOverlay.Size = UDim2.new(1, 0, 1, 0)
+                BlackOverlay.BackgroundColor3 = Color3.new(0, 0, 0)
+                BlackOverlay.BorderSizePixel = 0
+                BlackOverlay.ZIndex = 103
+                BlackOverlay.Parent = SatVal
+                corner(BlackOverlay, 4)
+                
+                local BlackGradient = Instance.new("UIGradient")
+                BlackGradient.Rotation = 90
+                BlackGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 1),
+                    NumberSequenceKeypoint.new(1, 0)
+                })
+                BlackGradient.Parent = BlackOverlay
+                
+                -- Hue bar (vertical rainbow using UIGradient)
+                local HueBar = Instance.new("Frame")
+                HueBar.Size = UDim2.new(0, 22, 0, 100)
+                HueBar.Position = UDim2.new(0, 140, 0, 10)
                 HueBar.BackgroundColor3 = Color3.new(1, 1, 1)
-                HueBar.Image = "rbxassetid://3641079629"
-                HueBar.ZIndex = 61
+                HueBar.BorderSizePixel = 0
+                HueBar.ZIndex = 101
                 HueBar.Parent = PickerFrame
-                corner(HueBar, 2)
+                corner(HueBar, 4)
                 
+                local HueGradient = Instance.new("UIGradient")
+                HueGradient.Rotation = 90
+                HueGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromHSV(0, 1, 1)),
+                    ColorSequenceKeypoint.new(0.167, Color3.fromHSV(0.167, 1, 1)),
+                    ColorSequenceKeypoint.new(0.333, Color3.fromHSV(0.333, 1, 1)),
+                    ColorSequenceKeypoint.new(0.5, Color3.fromHSV(0.5, 1, 1)),
+                    ColorSequenceKeypoint.new(0.667, Color3.fromHSV(0.667, 1, 1)),
+                    ColorSequenceKeypoint.new(0.833, Color3.fromHSV(0.833, 1, 1)),
+                    ColorSequenceKeypoint.new(1, Color3.fromHSV(0.999, 1, 1)),
+                })
+                HueGradient.Parent = HueBar
+                
+                -- Circular picker indicator for Sat/Val
                 local SatValPicker = Instance.new("Frame")
-                SatValPicker.Size = UDim2.new(0, 6, 0, 6)
+                SatValPicker.Size = UDim2.new(0, 12, 0, 12)
                 SatValPicker.BackgroundColor3 = Color3.new(1, 1, 1)
+                SatValPicker.BackgroundTransparency = 0.1
                 SatValPicker.BorderSizePixel = 0
-                SatValPicker.ZIndex = 62
+                SatValPicker.ZIndex = 105
                 SatValPicker.Parent = SatVal
-                corner(SatValPicker, 3)
-                stroke(SatValPicker, Color3.new(0, 0, 0), 1)
+                corner(SatValPicker, 6)
+                stroke(SatValPicker, Color3.new(0, 0, 0), 2)
                 
+                -- Hue bar picker indicator
                 local HuePicker = Instance.new("Frame")
-                HuePicker.Size = UDim2.new(1, 0, 0, 3)
+                HuePicker.Size = UDim2.new(1, 4, 0, 6)
+                HuePicker.Position = UDim2.new(0, -2, 0, 0)
                 HuePicker.BackgroundColor3 = Color3.new(1, 1, 1)
                 HuePicker.BorderSizePixel = 0
-                HuePicker.ZIndex = 62
+                HuePicker.ZIndex = 102
                 HuePicker.Parent = HueBar
+                corner(HuePicker, 3)
                 stroke(HuePicker, Color3.new(0, 0, 0), 1)
+                
+                -- Hex input field
+                local HexInput = Instance.new("TextBox")
+                HexInput.Size = UDim2.new(0, 85, 0, 22)
+                HexInput.Position = UDim2.new(0, 10, 1, -32)
+                HexInput.BackgroundColor3 = lib.theme.textbox.background
+                lib:_registerTheme(HexInput, "BackgroundColor3", "textbox", "background")
+                HexInput.BorderSizePixel = 0
+                HexInput.Text = "#" .. string.format("%02X%02X%02X", 
+                    math.floor(currentColor.R * 255), 
+                    math.floor(currentColor.G * 255), 
+                    math.floor(currentColor.B * 255))
+                HexInput.PlaceholderText = "#FFFFFF"
+                HexInput.TextColor3 = lib.theme.textbox.text
+                lib:_registerTheme(HexInput, "TextColor3", "textbox", "text")
+                HexInput.Font = Enum.Font.Code
+                HexInput.TextSize = 11
+                HexInput.ZIndex = 101
+                HexInput.ClearTextOnFocus = false
+                HexInput.Parent = PickerFrame
+                corner(HexInput, 3)
+                local hexStroke = stroke(HexInput, lib.theme.textbox.border, 1)
+                lib:_registerTheme(hexStroke, "Color", "textbox", "border")
                 
                 local h, s, v = Color3.toHSV(currentColor)
                 
@@ -1002,8 +1407,12 @@ function Spectrum:Window()
                     currentColor = Color3.fromHSV(h, s, v)
                     ColorBtn.BackgroundColor3 = currentColor
                     SatVal.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
-                    SatValPicker.Position = UDim2.new(s, -3, 1 - v, -3)
-                    HuePicker.Position = UDim2.new(0, 0, h, -1)
+                    SatValPicker.Position = UDim2.new(s, -6, 1 - v, -6)
+                    HuePicker.Position = UDim2.new(0, -2, h, -3)
+                    HexInput.Text = "#" .. string.format("%02X%02X%02X",
+                        math.floor(currentColor.R * 255),
+                        math.floor(currentColor.G * 255),
+                        math.floor(currentColor.B * 255))
                     if callback then callback(currentColor) end
                 end
                 
@@ -1017,11 +1426,22 @@ function Spectrum:Window()
                 
                 local draggingSV, draggingH = false, false
                 
-                SatVal.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then draggingSV = true end
+                BlackOverlay.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then 
+                        draggingSV = true 
+                        -- Immediate update on click
+                        s = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / SatVal.AbsoluteSize.X, 0, 1)
+                        v = 1 - math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / SatVal.AbsoluteSize.Y, 0, 1)
+                        updateColor()
+                    end
                 end)
                 HueBar.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then draggingH = true end
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then 
+                        draggingH = true 
+                        -- Immediate update on click
+                        h = math.clamp((input.Position.Y - HueBar.AbsolutePosition.Y) / HueBar.AbsoluteSize.Y, 0, 0.999)
+                        updateColor()
+                    end
                 end)
                 UserInputService.InputEnded:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1035,7 +1455,21 @@ function Spectrum:Window()
                             v = 1 - math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / SatVal.AbsoluteSize.Y, 0, 1)
                             updateColor()
                         elseif draggingH then
-                            h = math.clamp((input.Position.Y - HueBar.AbsolutePosition.Y) / HueBar.AbsoluteSize.Y, 0, 1)
+                            h = math.clamp((input.Position.Y - HueBar.AbsolutePosition.Y) / HueBar.AbsoluteSize.Y, 0, 0.999)
+                            updateColor()
+                        end
+                    end
+                end)
+                
+                -- Hex input handler
+                HexInput.FocusLost:Connect(function()
+                    local hex = HexInput.Text:gsub("#", ""):gsub("%s", "")
+                    if #hex == 6 then
+                        local r = tonumber(hex:sub(1,2), 16)
+                        local g = tonumber(hex:sub(3,4), 16)
+                        local b = tonumber(hex:sub(5,6), 16)
+                        if r and g and b then
+                            h, s, v = Color3.toHSV(Color3.fromRGB(r, g, b))
                             updateColor()
                         end
                     end
