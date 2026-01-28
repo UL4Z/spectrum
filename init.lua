@@ -21,6 +21,7 @@
 
 local Spectrum = {}
 Spectrum.__index = Spectrum
+Spectrum.Author = "@gr6wl"
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -30,6 +31,33 @@ local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 
+-- New modular core
+local function tryRequire(path)
+    local ok, mod = pcall(function()
+        return loadstring(readfile(path))()
+    end)
+    if ok and mod then
+        return mod
+    end
+    return nil
+end
+
+local ThemeEngine = tryRequire("libs/spectrum/Core/ThemeEngine.lua")
+local WindowManager = tryRequire("libs/spectrum/Core/WindowManager.lua")
+local TabSystem = tryRequire("libs/spectrum/Core/TabSystem.lua")
+local ComponentRegistry = tryRequire("libs/spectrum/Core/ComponentRegistry.lua")
+local ToggleComponent = tryRequire("libs/spectrum/Components/Toggle.lua")
+local ButtonComponent = tryRequire("libs/spectrum/Components/Button.lua")
+local SliderComponent = tryRequire("libs/spectrum/Components/Slider.lua")
+local DropdownComponent = tryRequire("libs/spectrum/Components/Dropdown.lua")
+local TextBoxComponent = tryRequire("libs/spectrum/Components/TextBox.lua")
+local ColorPickerComponent = tryRequire("libs/spectrum/Components/ColorPicker.lua")
+local KeybindComponent = tryRequire("libs/spectrum/Components/Keybind.lua")
+local MultiSelectComponent = tryRequire("libs/spectrum/Components/MultiSelect.lua")
+local GroupboxComponent = tryRequire("libs/spectrum/Components/Groupbox.lua") 
+
+-- Base inlined CS:GO‑style themes (used as fallback when local theme modules
+-- are not available, e.g. HTTP loadstring usage).
 local THEMES = {
     skeet = {
         name = "skeet",
@@ -106,11 +134,92 @@ local THEMES = {
     },
 }
 
-local function tween(obj, props, duration)
-    TweenService:Create(obj, TweenInfo.new(duration or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+-- Helper to (shallow) merge theme tables when loading from external theme modules.
+local function mergeTheme(base, override)
+    if not override then return base end
+    if not base then return override end
+    for k, v in pairs(override) do
+        base[k] = v
+    end
+    return base
 end
 
+-- Prefer dedicated theme modules under libs/spectrum/themes when running from
+-- the local filesystem (e.g. C:\Ghoul\libs\spectrum), while keeping inline
+-- defaults working for raw GitHub loadstring users.
+pcall(function()
+    if not readfile then return end
 
+    local basePath = "libs/spectrum/themes/"
+
+    local function tryLoadTheme(name, filename)
+        local ok, src = pcall(readfile, basePath .. filename)
+        if not ok or not src then return end
+        local fn, err = loadstring(src)
+        if not fn then return end
+        local okRun, result = pcall(fn)
+        if okRun and type(result) == "table" then
+            THEMES[name] = mergeTheme(THEMES[name], result)
+        end
+    end
+
+    tryLoadTheme("skeet", "skeet.lua")
+    tryLoadTheme("neverlose", "neverlose.lua")
+    tryLoadTheme("aimware", "aimware.lua")
+end)
+
+-- Tween wrapper: uses util/tween.lua when present for richer control,
+-- otherwise falls back to a simple inline tween.
+local TweenUtil
+pcall(function()
+    if not readfile then return end
+    local ok, src = pcall(readfile, "libs/spectrum/util/tween.lua")
+    if not ok or not src then return end
+    local fn = loadstring(src)
+    if not fn then return end
+    local okRun, result = pcall(fn)
+    if okRun and type(result) == "table" then
+        TweenUtil = result
+    end
+end)
+
+local function tween(obj, props, duration)
+    if TweenUtil and TweenUtil.play then
+        TweenUtil.play(obj, props, duration)
+    else
+        TweenService:Create(
+            obj,
+            TweenInfo.new(duration or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            props
+        ):Play()
+    end
+end
+
+-- Safe tween wrapper used by modular components
+function Spectrum:_safeTween(obj, props, duration)
+    if not obj or not obj.Parent then
+        return
+    end
+    pcall(function()
+        tween(obj, props, duration)
+    end)
+end
+
+-- Shared helpers for components so they can use theme registration
+function Spectrum:_corner(parent, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 0)
+    c.Parent = parent
+    return c
+end
+
+function Spectrum:_stroke(parent, color, thickness)
+    local s = Instance.new("UIStroke")
+    s.Color = color
+    s.Thickness = thickness or 1
+    s.Parent = parent
+    return s
+end
 
 local function corner(parent, radius)
     local c = Instance.new("UICorner")
@@ -140,6 +249,42 @@ function Spectrum.new(config)
     self._accentElements = {}
     self._themeElements = {}
     self._toggleRegistry = {}
+
+    -- New core architecture
+    self._themeEngine = ThemeEngine and ThemeEngine.new() or nil
+    if self._themeEngine then
+        self._themeEngine:Set(self.theme)
+    end
+    self._componentRegistry = ComponentRegistry and ComponentRegistry.new() or nil
+    if self._componentRegistry then
+        if ToggleComponent then
+            self._componentRegistry:Register("Toggle", ToggleComponent.new)
+        end
+        if ButtonComponent then
+            self._componentRegistry:Register("Button", ButtonComponent.new)
+        end
+        if SliderComponent then
+            self._componentRegistry:Register("Slider", SliderComponent.new)
+        end
+        if DropdownComponent then
+            self._componentRegistry:Register("Dropdown", DropdownComponent.new)
+        end
+        if TextBoxComponent then
+            self._componentRegistry:Register("TextBox", TextBoxComponent.new)
+        end
+        if ColorPickerComponent then
+            self._componentRegistry:Register("ColorPicker", ColorPickerComponent.new)
+        end
+        if KeybindComponent then
+            self._componentRegistry:Register("Keybind", KeybindComponent.new)
+        end
+        if MultiSelectComponent then
+            self._componentRegistry:Register("MultiSelect", MultiSelectComponent.new)
+        end
+        if GroupboxComponent then
+            self._componentRegistry:Register("Groupbox", GroupboxComponent.new)
+        end
+    end
     
     return self
 end
@@ -194,161 +339,185 @@ function Spectrum:Window()
     local theme = self.theme
     local accent = self.accent
     
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "Spectrum_" .. tostring(math.random(100000, 999999))
-    ScreenGui.IgnoreGuiInset = true
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-    ScreenGui.ResetOnSpawn = false
-    pcall(function() ScreenGui.Parent = CoreGui end)
-    if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
-    
-    local Main = Instance.new("Frame")
-    Main.Name = "Main"
-    Main.Size = UDim2.new(0, self.size[1], 0, self.size[2])
-    Main.Position = UDim2.new(0.5, -self.size[1]/2, 0.5, -self.size[2]/2)
-    Main.BackgroundColor3 = theme.window.background
-    lib:_registerTheme(Main, "BackgroundColor3", "window", "background")
-    Main.BorderSizePixel = 0
-    Main.Active = true
-    Main.Draggable = true
-    Main.ZIndex = 1
-    Main.Parent = ScreenGui
+    -- New window manager path (preferred)
+    local ScreenGui, Main, TabBar, ContentArea
+    if WindowManager then
+        local wm = WindowManager.new(theme, accent, self.size, self.toggleKey)
+        self._windowManager = wm
+        local main, tabBar, content = wm:BuildWindow(self.title, tween, function(p, r)
+            return self:_corner(p, r)
+        end, function(p, c, t)
+            return self:_stroke(p, c, t)
+        end)
+        Main = main
+        TabBar = tabBar
+        ContentArea = content
+        ScreenGui = wm.Gui
+    else
+        -- Fallback to inline legacy implementation (keeps backwards compatibility
+        -- if the new core files are missing in remote environments).
+        ScreenGui = Instance.new("ScreenGui")
+        ScreenGui.Name = "Spectrum_" .. tostring(math.random(100000, 999999))
+        ScreenGui.IgnoreGuiInset = true
+        ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+        ScreenGui.ResetOnSpawn = false
+        pcall(function()
+            ScreenGui.Parent = CoreGui
+        end)
+        if not ScreenGui.Parent then
+            ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+        end
+        
+        Main = Instance.new("Frame")
+        Main.Name = "Main"
+        Main.Size = UDim2.new(0, self.size[1], 0, self.size[2])
+        Main.Position = UDim2.new(0.5, -self.size[1] / 2, 0.5, -self.size[2] / 2)
+        Main.BackgroundColor3 = theme.window.background
+        self:_registerTheme(Main, "BackgroundColor3", "window", "background")
+        Main.BorderSizePixel = 0
+        Main.Active = true
+        Main.Draggable = true
+        Main.ZIndex = 1
+        Main.Parent = ScreenGui
+        
+        self:_corner(Main, theme.sizes.corner)
+        self:_stroke(Main, theme.window.border, theme.window.border_thickness)
+        
+        local AccentLine = Instance.new("Frame")
+        AccentLine.Size = UDim2.new(1, 0, 0, 2)
+        AccentLine.Position = UDim2.new(0, 0, 0, 0)
+        AccentLine.BackgroundColor3 = accent
+        AccentLine.BorderSizePixel = 0
+        AccentLine.ZIndex = 10
+        AccentLine.Parent = Main
+        self:_registerAccent(AccentLine, "BackgroundColor3")
+        
+        local TitleBar = Instance.new("Frame")
+        TitleBar.Size = UDim2.new(1, 0, 0, 28)
+        TitleBar.Position = UDim2.new(0, 0, 0, 2)
+        TitleBar.BackgroundColor3 = theme.window.titlebar
+        self:_registerTheme(TitleBar, "BackgroundColor3", "window", "titlebar")
+        TitleBar.BorderSizePixel = 0
+        TitleBar.ZIndex = 2
+        TitleBar.Parent = Main
+        
+        local TitleLabel = Instance.new("TextLabel")
+        TitleLabel.Text = self.title:lower()
+        TitleLabel.Size = UDim2.new(0, 150, 1, 0)
+        TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+        TitleLabel.BackgroundTransparency = 1
+        TitleLabel.TextColor3 = theme.window.title_text
+        self:_registerTheme(TitleLabel, "TextColor3", "window", "title_text")
+        TitleLabel.Font = theme.fonts.title
+        TitleLabel.TextSize = theme.sizes.title
+        TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TitleLabel.ZIndex = 3
+        TitleLabel.Parent = TitleBar
+        
+        local CloseBtn = Instance.new("TextButton")
+        CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+        CloseBtn.Position = UDim2.new(1, -28, 0, 0)
+        CloseBtn.BackgroundTransparency = 1
+        CloseBtn.Text = "x"
+        CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+        CloseBtn.Font = Enum.Font.Code
+        CloseBtn.TextSize = 14
+        CloseBtn.ZIndex = 3
+        CloseBtn.Parent = TitleBar
+        
+        CloseBtn.MouseEnter:Connect(function()
+            CloseBtn.TextColor3 = theme.close_hover
+        end)
+        CloseBtn.MouseLeave:Connect(function()
+            CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+        end)
+        CloseBtn.MouseButton1Click:Connect(function()
+            Main.Visible = false
+        end)
+        
+        TabBar = Instance.new("Frame")
+        TabBar.Name = "TabBar"
+        TabBar.Size = UDim2.new(1, -10, 0, 26)
+        TabBar.Position = UDim2.new(0, 5, 0, 32)
+        TabBar.BackgroundColor3 = theme.tab.background
+        self:_registerTheme(TabBar, "BackgroundColor3", "tab", "background")
+        TabBar.BorderSizePixel = 0
+        TabBar.ZIndex = 2
+        TabBar.Parent = Main
+        
+        self:_corner(TabBar, theme.sizes.corner)
+        
+        local TabList = Instance.new("UIListLayout")
+        TabList.FillDirection = Enum.FillDirection.Horizontal
+        TabList.Padding = UDim.new(0, 2)
+        TabList.SortOrder = Enum.SortOrder.LayoutOrder
+        TabList.Parent = TabBar
+        
+        ContentArea = Instance.new("Frame")
+        ContentArea.Name = "ContentArea"
+        ContentArea.Size = UDim2.new(1, -10, 1, -65)
+        ContentArea.Position = UDim2.new(0, 5, 0, 60)
+        ContentArea.BackgroundColor3 = theme.window.content
+        self:_registerTheme(ContentArea, "BackgroundColor3", "window", "content")
+        ContentArea.BackgroundTransparency = 0
+        ContentArea.BorderSizePixel = 0
+        ContentArea.ZIndex = 2
+        ContentArea.ClipsDescendants = true
+        ContentArea.Parent = Main
+        
+        self:_corner(ContentArea, theme.sizes.corner)
+        
+        local Watermark = Instance.new("TextLabel")
+        Watermark.Text = "spectrum | @gr6wl"
+        Watermark.Size = UDim2.new(0, 140, 0, 14)
+        Watermark.Position = UDim2.new(1, -145, 0, 4)
+        Watermark.BackgroundTransparency = 1
+        Watermark.TextColor3 = theme.window.watermark
+        self:_registerTheme(Watermark, "TextColor3", "window", "watermark")
+        Watermark.Font = Enum.Font.Code
+        Watermark.TextSize = 10
+        Watermark.TextXAlignment = Enum.TextXAlignment.Right
+        Watermark.ZIndex = 3
+        Watermark.Parent = TitleBar
+        
+        local Mini = Instance.new("TextButton")
+        Mini.Name = "Mini"
+        Mini.Size = UDim2.new(0, 40, 0, 40)
+        Mini.Position = UDim2.new(0, 15, 0.5, -20)
+        Mini.BackgroundColor3 = theme.window.background
+        self:_registerTheme(Mini, "BackgroundColor3", "window", "background")
+        Mini.Text = "S"
+        Mini.TextColor3 = accent
+        Mini.Font = Enum.Font.Code
+        Mini.TextSize = 18
+        Mini.Visible = false
+        Mini.Active = true
+        Mini.Draggable = true
+        Mini.Parent = ScreenGui
+        
+        self:_corner(Mini, theme.sizes.corner)
+        local miniStroke = self:_stroke(Mini, accent, 1)
+        self:_registerAccent(Mini, "TextColor3")
+        self:_registerAccent(miniStroke, "Color")
+        
+        Mini.MouseButton1Click:Connect(function()
+            Mini.Visible = false
+            Main.Visible = true
+        end)
+        
+        UserInputService.InputBegan:Connect(function(input, gpe)
+            if gpe then
+                return
+            end
+            if input.KeyCode == self.toggleKey or input.KeyCode == Enum.KeyCode.RightShift then
+                Main.Visible = not Main.Visible
+                Mini.Visible = not Main.Visible
+            end
+        end)
+    end
     
     -- Store ScreenGui reference for dropdown popups
     lib._screenGui = ScreenGui
-    
-    corner(Main, theme.sizes.corner)
-    stroke(Main, theme.window.border, theme.window.border_thickness)
-    
-    local AccentLine = Instance.new("Frame")
-    AccentLine.Size = UDim2.new(1, 0, 0, 2)
-    AccentLine.Position = UDim2.new(0, 0, 0, 0)
-    AccentLine.BackgroundColor3 = accent
-    AccentLine.BorderSizePixel = 0
-    AccentLine.ZIndex = 10
-    AccentLine.Parent = Main
-    lib:_registerAccent(AccentLine, "BackgroundColor3")
-    
-    local TitleBar = Instance.new("Frame")
-    TitleBar.Size = UDim2.new(1, 0, 0, 28)
-    TitleBar.Position = UDim2.new(0, 0, 0, 2)
-    TitleBar.BackgroundColor3 = theme.window.titlebar
-    lib:_registerTheme(TitleBar, "BackgroundColor3", "window", "titlebar")
-    TitleBar.BorderSizePixel = 0
-    TitleBar.ZIndex = 2
-    TitleBar.Parent = Main
-    
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Text = self.title:lower()
-    TitleLabel.Size = UDim2.new(0, 150, 1, 0)
-    TitleLabel.Position = UDim2.new(0, 10, 0, 0)
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.TextColor3 = theme.window.title_text
-    lib:_registerTheme(TitleLabel, "TextColor3", "window", "title_text")
-    TitleLabel.Font = theme.fonts.title
-    TitleLabel.TextSize = theme.sizes.title
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    TitleLabel.ZIndex = 3
-    TitleLabel.Parent = TitleBar
-    
-    local CloseBtn = Instance.new("TextButton")
-    CloseBtn.Size = UDim2.new(0, 28, 0, 28)
-    CloseBtn.Position = UDim2.new(1, -28, 0, 0)
-    CloseBtn.BackgroundTransparency = 1
-    CloseBtn.Text = "x"
-    CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
-    CloseBtn.Font = Enum.Font.Code
-    CloseBtn.TextSize = 14
-    CloseBtn.ZIndex = 3
-    CloseBtn.Parent = TitleBar
-    
-    CloseBtn.MouseEnter:Connect(function()
-        CloseBtn.TextColor3 = theme.close_hover
-    end)
-    CloseBtn.MouseLeave:Connect(function()
-        CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
-    end)
-    CloseBtn.MouseButton1Click:Connect(function()
-        Main.Visible = false
-    end)
-    
-    local TabBar = Instance.new("Frame")
-    TabBar.Name = "TabBar"
-    TabBar.Size = UDim2.new(1, -10, 0, 26)
-    TabBar.Position = UDim2.new(0, 5, 0, 32)
-    TabBar.BackgroundColor3 = theme.tab.background
-    lib:_registerTheme(TabBar, "BackgroundColor3", "tab", "background")
-    TabBar.BorderSizePixel = 0
-    TabBar.ZIndex = 2
-    TabBar.Parent = Main
-    
-    corner(TabBar, theme.sizes.corner)
-    
-    local TabList = Instance.new("UIListLayout")
-    TabList.FillDirection = Enum.FillDirection.Horizontal
-    TabList.Padding = UDim.new(0, 2)
-    TabList.SortOrder = Enum.SortOrder.LayoutOrder
-    TabList.Parent = TabBar
-    
-    local ContentArea = Instance.new("Frame")
-    ContentArea.Name = "ContentArea"
-    ContentArea.Size = UDim2.new(1, -10, 1, -65)
-    ContentArea.Position = UDim2.new(0, 5, 0, 60)
-    ContentArea.BackgroundColor3 = theme.window.content
-    lib:_registerTheme(ContentArea, "BackgroundColor3", "window", "content")
-    ContentArea.BackgroundTransparency = 0
-    ContentArea.BorderSizePixel = 0
-    ContentArea.ZIndex = 2
-    ContentArea.ClipsDescendants = true
-    ContentArea.Parent = Main
-    
-    corner(ContentArea, theme.sizes.corner)
-    
-    local Watermark = Instance.new("TextLabel")
-    Watermark.Text = "spectrum"
-    Watermark.Size = UDim2.new(0, 60, 0, 14)
-    Watermark.Position = UDim2.new(1, -65, 0, 4)
-    Watermark.BackgroundTransparency = 1
-    Watermark.TextColor3 = theme.window.watermark
-    lib:_registerTheme(Watermark, "TextColor3", "window", "watermark")
-    Watermark.Font = Enum.Font.Code
-    Watermark.TextSize = 10
-    Watermark.TextXAlignment = Enum.TextXAlignment.Right
-    Watermark.ZIndex = 3
-    Watermark.Parent = TitleBar
-    
-    local Mini = Instance.new("TextButton")
-    Mini.Name = "Mini"
-    Mini.Size = UDim2.new(0, 40, 0, 40)
-    Mini.Position = UDim2.new(0, 15, 0.5, -20)
-    Mini.BackgroundColor3 = theme.window.background
-    lib:_registerTheme(Mini, "BackgroundColor3", "window", "background")
-    Mini.Text = "S"
-    Mini.TextColor3 = accent
-    Mini.Font = Enum.Font.Code
-    Mini.TextSize = 18
-    Mini.Visible = false
-    Mini.Active = true
-    Mini.Draggable = true
-    Mini.Parent = ScreenGui
-    
-    corner(Mini, theme.sizes.corner)
-    local miniStroke = stroke(Mini, accent, 1)
-    lib:_registerAccent(Mini, "TextColor3")
-    lib:_registerAccent(miniStroke, "Color")
-    
-    Mini.MouseButton1Click:Connect(function()
-        Mini.Visible = false
-        Main.Visible = true
-    end)
-    
-    UserInputService.InputBegan:Connect(function(input, gpe)
-        if gpe then return end
-        if input.KeyCode == lib.toggleKey or input.KeyCode == Enum.KeyCode.RightShift then
-            Main.Visible = not Main.Visible
-            Mini.Visible = not Main.Visible
-        end
-    end)
     
     local Window = {}
     Window._lib = lib
@@ -359,8 +528,17 @@ function Spectrum:Window()
     Window._firstTab = true
     
     function Window:Tab(name, icon)
+        -- New TabSystem path (preferred)
+        if TabSystem then
+            if not self._tabSystem then
+                self._tabSystem = TabSystem.new(lib, self)
+            end
+            local tab = self._tabSystem:CreateTab(name, icon)
+            table.insert(self._tabs, tab)
+            return tab
+        end
+
         local tab = {}
-        -- local theme = lib.theme (Removed to ensure dynamic access)
         local accent = lib.accent
         
         local Button = Instance.new("TextButton")
@@ -521,6 +699,12 @@ function Spectrum:Window()
         tab._lib = lib
         
         function tab:Groupbox(title)
+            if lib._componentRegistry then
+                local ctor = lib._componentRegistry:Get("Groupbox")
+                if ctor then
+                    return ctor(lib, self._page, {Name = title})
+                end
+            end
             local group = {}
             -- local theme = lib.theme
             local accent = lib.accent
@@ -595,60 +779,39 @@ function Spectrum:Window()
             group._content = Content
             group._lib = lib
             
-                function group:Toggle(text, default, callback, configKey)
-                    -- local theme = lib.theme
-                    local accent = lib.accent
-                    
-                    local Frame = Instance.new("Frame")
-                    Frame.Size = UDim2.new(1, -10, 0, 28)
-                    Frame.BackgroundTransparency = 1
-                    Frame.ZIndex = 10
-                    Frame.Parent = self._content
-                    
-                    local Checkbox = Instance.new("TextButton")
-                    Checkbox.Size = UDim2.new(0, 14, 0, 14)
-                    Checkbox.Position = UDim2.new(0, 0, 0.5, -7)
-                    Checkbox.BackgroundColor3 = lib.theme.toggle.background
-                    lib:_registerTheme(Checkbox, "BackgroundColor3", "toggle", "background")
-                    Checkbox.Text = ""
+            function group:Toggle(text, default, callback, configKey)
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("Toggle")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Default = default,
+                            Callback = callback,
+                            ConfigKey = configKey,
+                        })
+                    end
+                end
+                -- Fallback to legacy implementation if modular component is missing
+                local accent = lib.accent
+                
+                local Frame = Instance.new("Frame")
+                Frame.Size = UDim2.new(1, -10, 0, 28)
+                Frame.BackgroundTransparency = 1
+                Frame.ZIndex = 10
+                Frame.Parent = self._content
+                
+                local Checkbox = Instance.new("TextButton")
+                Checkbox.Size = UDim2.new(0, 14, 0, 14)
+                Checkbox.Position = UDim2.new(0, 0, 0.5, -7)
+                Checkbox.BackgroundColor3 = lib.theme.toggle.background
+                lib:_registerTheme(Checkbox, "BackgroundColor3", "toggle", "background")
+                Checkbox.Text = ""
                 Checkbox.AutoButtonColor = false
                 Checkbox.ZIndex = 11
                 Checkbox.Parent = Frame
                 
-                corner(Checkbox, 2)
-                corner(Checkbox, 2)
-                local BoxStroke = stroke(Checkbox, default and accent or lib.theme.toggle.border_off, 1)
-                lib:_registerTheme(BoxStroke, "Color", "toggle", "border_off") -- Register base color logic?
-                -- Problem: If toggled ON, it uses Accent. SetTheme overwrites property with 'border_off'.
-                -- This breaks toggle state visual if ON while switching.
-                -- However, setState is called? No.
-                -- If I register it, SetTheme sets it to border_off.
-                -- If it's ON, it should be Accent.
-                -- Better NOT register dynamic properties that depend on state, 
-                -- or handle re-application of state.
-                -- I'll skip registering BoxStroke Color here, relying on setState?
-                -- But if theme changes while OFF, it needs to update.
-                -- If I don't register, it stays old color.
-                -- I will register it. If it glitches when ON during switch, clicking it fixes it.
-                -- Actually, Spectrum:SetTheme iterates elements.
-                -- If I can force update state?
-                -- I'll leave it unregistered for now to avoid reverting state color.
-                -- Wait, if OFF -> it needs update.
-                -- I will register it, but maybe I should check state in SetTheme? No too complex.
-                -- I'll use the lib:SetTheme to potentially trigger a cleanup or just accept it.
-                -- User priority: "Actually changeable".
-                -- If I change theme, I want borders to change.
-                -- I will register it.
-                lib:_unregisterAccent = nil -- placeholder
-                -- Actually, accents are separate.
-                -- If I register it as theme element, SetTheme sets it.
-                -- If it was Accent, it gets overwritten.
-                -- Maybe only register if !default?
-                -- I'll skip registration for BoxStroke Color for now to be safe, 
-                -- relying on subsequent interaction or just register it and let it be.
-                -- Actually, simplest is just updating usages in setState.
-                -- If I switch theme, the old color persists until toggle.
-                -- That's acceptable for "Simple". I won't register BoxStroke Color.
+                lib:_corner(Checkbox, 2)
+                local BoxStroke = lib:_stroke(Checkbox, default and accent or lib.theme.toggle.border_off, 1)
                 
                 local Check = Instance.new("Frame")
                 Check.Size = UDim2.new(0, 8, 0, 8)
@@ -657,7 +820,7 @@ function Spectrum:Window()
                 Check.BackgroundTransparency = default and 0 or 1
                 Check.ZIndex = 12
                 Check.Parent = Checkbox
-                corner(Check, 1)
+                lib:_corner(Check, 1)
                 lib:_registerAccent(Check, "BackgroundColor3")
                 
                 local Label = Instance.new("TextLabel")
@@ -666,7 +829,6 @@ function Spectrum:Window()
                 Label.BackgroundTransparency = 1
                 Label.Text = text
                 Label.TextColor3 = default and lib.theme.toggle.label_on or lib.theme.toggle.label_off
-                -- Dynamic property (state dependent), skip registering Color.
                 Label.Font = lib.theme.fonts.label
                 lib:_registerTheme(Label, "Font", "fonts", "label")
                 Label.TextSize = lib.theme.sizes.label
@@ -678,7 +840,9 @@ function Spectrum:Window()
                 local state = default
                 
                 local function setState(newState, skipCallback)
-                    if state == newState then return end
+                    if state == newState then
+                        return
+                    end
                     state = newState
                     local th = lib.theme
                     tween(Check, {BackgroundTransparency = state and 0 or 1})
@@ -695,7 +859,9 @@ function Spectrum:Window()
                         Check = Check,
                         BoxStroke = BoxStroke,
                         setState = setState,
-                        getState = function() return state end
+                        getState = function()
+                            return state
+                        end,
                     }
                 end
                 
@@ -709,12 +875,25 @@ function Spectrum:Window()
                     end
                 end)
                 
-                return {setState = setState, getState = function() return state end}
+                return {
+                    setState = setState,
+                    getState = function()
+                        return state
+                    end,
+                }
             end
             
             function group:Button(text, callback)
-                -- local theme = lib.theme
-                
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("Button")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Callback = callback,
+                        })
+                    end
+                end
+                -- Fallback legacy
                 local Btn = Instance.new("TextButton")
                 Btn.Size = UDim2.new(1, -10, 0, 24)
                 Btn.BackgroundColor3 = lib.theme.button.background
@@ -731,7 +910,7 @@ function Spectrum:Window()
                 Btn.ZIndex = 10
                 Btn.Parent = self._content
                 
-                corner(Btn, 2)
+                lib:_corner(Btn, 2)
                 
                 Btn.MouseEnter:Connect(function()
                     tween(Btn, {BackgroundColor3 = lib.theme.button.background_hover, TextColor3 = lib.theme.button.text_hover})
@@ -744,37 +923,52 @@ function Spectrum:Window()
                     task.delay(0.1, function()
                         tween(Btn, {BackgroundColor3 = lib.theme.button.background}, 0.2)
                     end)
-                    if callback then callback() end
+                    if callback then
+                        callback()
+                    end
                 end)
                 
                 return Btn
             end
             
-                function group:Slider(text, min, max, default, step, callback)
-                    -- local theme = lib.theme
-                    local accent = lib.accent
-                    
-                    local Frame = Instance.new("Frame")
-                    Frame.Size = UDim2.new(1, -10, 0, 32)
-                    Frame.BackgroundTransparency = 1
-                    Frame.ZIndex = 10
-                    Frame.Parent = self._content
-                    
-                    local Label = Instance.new("TextLabel")
-                    Label.Size = UDim2.new(0.4, 0, 0, 14)
-                    Label.Position = UDim2.new(0, 0, 0, 2)
-                    Label.BackgroundTransparency = 1
-                    Label.Text = text
-                    Label.TextColor3 = lib.theme.slider.label
-                    lib:_registerTheme(Label, "TextColor3", "slider", "label")
-                    Label.Font = lib.theme.fonts.label
-                    lib:_registerTheme(Label, "Font", "fonts", "label")
-                    Label.TextSize = lib.theme.sizes.label
-                    lib:_registerTheme(Label, "TextSize", "sizes", "label")
-                    Label.TextXAlignment = Enum.TextXAlignment.Left
-                    Label.ZIndex = 11
-                    Label.Parent = Frame
+            function group:Slider(text, min, max, default, step, callback)
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("Slider")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Min = min,
+                            Max = max,
+                            Default = default,
+                            Step = step,
+                            Callback = callback,
+                        })
+                    end
+                end
+                -- Fallback legacy slider if modular component doesn't exist
+                local accent = lib.accent
                 
+                local Frame = Instance.new("Frame")
+                Frame.Size = UDim2.new(1, -10, 0, 32)
+                Frame.BackgroundTransparency = 1
+                Frame.ZIndex = 10
+                Frame.Parent = self._content
+                
+                local Label = Instance.new("TextLabel")
+                Label.Size = UDim2.new(0.4, 0, 0, 14)
+                Label.Position = UDim2.new(0, 0, 0, 2)
+                Label.BackgroundTransparency = 1
+                Label.Text = text
+                Label.TextColor3 = lib.theme.slider.label
+                lib:_registerTheme(Label, "TextColor3", "slider", "label")
+                Label.Font = lib.theme.fonts.label
+                lib:_registerTheme(Label, "Font", "fonts", "label")
+                Label.TextSize = lib.theme.sizes.label
+                lib:_registerTheme(Label, "TextSize", "sizes", "label")
+                Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.ZIndex = 11
+                Label.Parent = Frame
+            
                 local Val = Instance.new("TextLabel")
                 Val.Size = UDim2.new(0, 40, 0, 14)
                 Val.Position = UDim2.new(1, -40, 0, 2)
@@ -818,7 +1012,7 @@ function Spectrum:Window()
                 Handle.ZIndex = 13
                 Handle.Parent = Track
                 
-                local function snap(number, s)
+                local function snapFn(number, s)
                     if s == 0 then return number end
                     return math.floor(number / s + 0.5) * s
                 end
@@ -827,7 +1021,7 @@ function Spectrum:Window()
                 local function update(input)
                     local pos = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
                     local rawVal = min + ((max - min) * pos)
-                    local val = snap(rawVal, step)
+                    local val = snapFn(rawVal, step)
                     
                     local decimals = 0
                     if step < 1 then
@@ -843,12 +1037,11 @@ function Spectrum:Window()
                 
                 Track.MouseButton1Down:Connect(function() dragging = true end)
                 
-                -- Track connections for cleanup
                 local inputEndedConn = nil
                 local inputChangedConn = nil
                 
                 local function setupDragConnections()
-                    if inputEndedConn then return end  -- Already connected
+                    if inputEndedConn then return end
                     
                     inputEndedConn = UserInputService.InputEnded:Connect(function(input)
                         if input.UserInputType == Enum.UserInputType.MouseButton1 then 
@@ -869,10 +1062,8 @@ function Spectrum:Window()
                     dragging = false
                 end
                 
-                -- Setup on first interaction
                 Track.MouseButton1Down:Connect(setupDragConnections)
                 
-                -- Cleanup when element is destroyed
                 Frame.AncestryChanged:Connect(function()
                     if not Frame:IsDescendantOf(game) then
                         cleanupDragConnections()
@@ -881,7 +1072,18 @@ function Spectrum:Window()
             end
             
             function group:Dropdown(text, options, default, callback)
-                -- local theme = lib.theme
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("Dropdown")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Options = options,
+                            Default = default,
+                            Callback = callback,
+                        })
+                    end
+                end
+                -- legacy fallback
                 
                 local Frame = Instance.new("Frame")
                 Frame.Size = UDim2.new(1, -10, 0, 28)
@@ -999,8 +1201,17 @@ function Spectrum:Window()
             end
             
             function group:TextBox(label, placeholder, callback)
-                -- local theme = lib.theme
-                local accent = lib.accent
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("TextBox")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Label = label,
+                            Placeholder = placeholder,
+                            Callback = callback,
+                        })
+                    end
+                end
+                -- legacy fallback
                 
                 local Frame = Instance.new("Frame")
                 Frame.Size = UDim2.new(1, -10, 0, 28)
@@ -1066,6 +1277,27 @@ function Spectrum:Window()
             end
             
             function group:Keybind(label, arg1, arg2)
+                -- Preferred modular keybind:
+                -- Supports both original signatures:
+                -- (label, defaultKey, callback) or (label, configTable, configKey)
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("Keybind")
+                    if ctor then
+                        if type(arg2) == "function" then
+                            return ctor(lib, self._content, {
+                                Label = label,
+                                DefaultKey = arg1,
+                                Callback = arg2,
+                            })
+                        else
+                            return ctor(lib, self._content, {
+                                Label = label,
+                                ConfigTable = arg1,
+                                ConfigKey = arg2,
+                            })
+                        end
+                    end
+                end
                 -- Signature detection
                 local configTable, configKey, callback, defaultKey
                 local isCallbackMode = false
@@ -1237,6 +1469,16 @@ function Spectrum:Window()
             end
             
             function group:ColorPicker(text, default, callback)
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("ColorPicker")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Default = default,
+                            Callback = callback,
+                        })
+                    end
+                end
                 local accent = lib.accent
                 
                 local Frame = Instance.new("Frame")
@@ -1482,6 +1724,17 @@ function Spectrum:Window()
             end
             
             function group:MultiSelect(text, options, defaults, callback)
+                if lib._componentRegistry then
+                    local ctor = lib._componentRegistry:Get("MultiSelect")
+                    if ctor then
+                        return ctor(lib, self._content, {
+                            Name = text,
+                            Options = options,
+                            Defaults = defaults,
+                            Callback = callback,
+                        })
+                    end
+                end
                 local theme = lib.theme
                 local accent = lib.accent
                 
@@ -1622,7 +1875,23 @@ function Spectrum:Window()
     return Window
 end
 
-Spectrum.Key = {
+-- Utility loader for optional local modules (config / key) when running from
+-- the filesystem. Falls back to lightweight built‑ins when not available.
+local function loadLocalModule(path)
+    if not readfile then return nil end
+    local ok, src = pcall(readfile, path)
+    if not ok or not src then return nil end
+    local fn = loadstring(src)
+    if not fn then return nil end
+    local okRun, result = pcall(fn)
+    if okRun and type(result) == "table" then
+        return result
+    end
+    return nil
+end
+
+-- Key system (prefer util/key.lua to match README behaviour)
+Spectrum.Key = loadLocalModule("libs/spectrum/util/key.lua") or {
     validate = function(key, options)
         options = options or {}
         if not key or key == "" then return false, "No key" end
@@ -1636,20 +1905,26 @@ Spectrum.Key = {
     end,
     getHWID = function()
         local hwid = nil
-        pcall(function() hwid = game:GetService("RbxAnalyticsService"):GetClientId() end)
+        pcall(function()
+            hwid = game:GetService("RbxAnalyticsService"):GetClientId()
+        end)
         return hwid or tostring(LocalPlayer.UserId)
     end
 }
 
-Spectrum.Config = {
+-- Config system (prefer util/config.lua; keep simple JSON fallback for HTTP users)
+Spectrum.Config = loadLocalModule("libs/spectrum/util/config.lua") or {
     save = function(name, data, folder)
         if not writefile then return false end
         folder = folder or "spectrum_configs"
-        pcall(function()
-            if not isfolder(folder) then makefolder(folder) end
-            writefile(folder .. "/" .. name .. ".json", HttpService:JSONEncode(data))
+        local path = folder .. "/" .. name .. ".json"
+        local success, err = pcall(function()
+            if not isfolder(folder) then
+                makefolder(folder)
+            end
+            writefile(path, HttpService:JSONEncode(data))
         end)
-        return true
+        return success, err
     end,
     load = function(name, folder)
         if not readfile or not isfile then return nil end

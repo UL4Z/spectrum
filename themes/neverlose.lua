@@ -89,6 +89,21 @@ return {
         label = Color3.fromRGB(200, 200, 210),
     },
     
+    -- CS:GO-style icons & sounds (Neverlose‑inspired)
+    icons = {
+        Parry = "rbxassetid://6022668955",   -- Lua/Code icon (Rage/Script)
+        Players = "rbxassetid://6035181869", -- Chat icon (Players/Social)
+        Visuals = "rbxassetid://6031154871", -- Search/Inspect (Visuals)
+        Outfit = "rbxassetid://6035067857",  -- Save icon (Configs/Outfits)
+        Settings = "rbxassetid://6031280882" -- Gear icon (Settings)
+    },
+    
+    sounds = {
+        Hover = "rbxassetid://10066931761",
+        Click = "rbxassetid://6895079853",
+        Popup = "rbxassetid://225320558",
+    },
+    
     scrollbar = Color3.fromRGB(70, 70, 90),
     close_hover = Color3.fromRGB(255, 90, 90),
 }

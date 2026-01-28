@@ -89,6 +89,15 @@ return {
         label = Color3.fromRGB(200, 200, 200),
     },
     
+    -- CS:GO-style tab icons (matches inline theme in main library)
+    icons = {
+        Parry = "rbxassetid://10723415903",
+        Players = "rbxassetid://10723434557",
+        Visuals = "rbxassetid://10723396593",
+        Outfit = "rbxassetid://10723346960",
+        Settings = "rbxassetid://10734950309",
+    },
+    
     scrollbar = Color3.fromRGB(60, 60, 60),
     close_hover = Color3.fromRGB(255, 80, 80),
 }

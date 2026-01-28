@@ -89,6 +89,15 @@ return {
         label = Color3.fromRGB(180, 180, 185),
     },
     
+    -- CS:GO‑style icons for tab layout (Gamesense‑like)
+    icons = {
+        Parry = "rbxassetid://10723415903",
+        Players = "rbxassetid://10723434557",
+        Visuals = "rbxassetid://10723396593",
+        Outfit = "rbxassetid://10723346960",
+        Settings = "rbxassetid://10734950309",
+    },
+    
     scrollbar = Color3.fromRGB(60, 60, 70),
     close_hover = Color3.fromRGB(255, 100, 100),
 }
