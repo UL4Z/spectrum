@@ -18,7 +18,7 @@ function Groupbox.new(lib, parent, config)
     Container.BackgroundColor3 = theme.groupbox.background
     lib:_registerTheme(Container, "BackgroundColor3", "groupbox", "background")
     Container.BorderSizePixel = 0
-    Container.ZIndex = 10
+    Container.ZIndex = 1
     Container.Parent = parent
     
     local c = lib:_corner(Container, theme.sizes.corner_groupbox)
@@ -38,7 +38,7 @@ function Groupbox.new(lib, parent, config)
     lib:_registerTheme(Header, "BackgroundColor3", "groupbox", "header")
     Header.BorderSizePixel = 0
     Header.LayoutOrder = 1
-    Header.ZIndex = 10
+    Header.ZIndex = 2
     Header.Parent = Container
     
     local ch = lib:_corner(Header, theme.sizes.corner_groupbox)
@@ -55,7 +55,7 @@ function Groupbox.new(lib, parent, config)
     HeaderLabel.TextSize = theme.sizes.header
     lib:_registerTheme(HeaderLabel, "TextSize", "sizes", "header")
     HeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
-    HeaderLabel.ZIndex = 11
+    HeaderLabel.ZIndex = 3
     HeaderLabel.Parent = Header
     lib:_registerAccent(HeaderLabel, "TextColor3")
     
@@ -64,7 +64,7 @@ function Groupbox.new(lib, parent, config)
     Content.AutomaticSize = Enum.AutomaticSize.Y
     Content.BackgroundTransparency = 1
     Content.LayoutOrder = 2
-    Content.ZIndex = 10
+    Content.ZIndex = 2
     Content.Parent = Container
     
     local ContentList = Instance.new("UIListLayout")
