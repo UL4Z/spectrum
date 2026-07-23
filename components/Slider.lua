@@ -49,7 +49,7 @@ function Slider.new(lib, parent, config)
     Label.ZIndex = 11
     Label.Parent = Frame
 
-    local Val = Instance.new("TextLabel")
+    local Val = Instance.new("TextBox")
     Val.Size = UDim2.new(0, 80, 0, 14)
     Val.Position = UDim2.new(1, -80, 0, 2)
     Val.BackgroundTransparency = 1
@@ -60,6 +60,7 @@ function Slider.new(lib, parent, config)
     Val.TextSize = theme.sizes.value
     lib:_registerTheme(Val, "TextSize", "sizes", "value")
     Val.TextXAlignment = Enum.TextXAlignment.Right
+    Val.ClearTextOnFocus = false
     Val.ZIndex = 11
     Val.Parent = Frame
 
@@ -92,6 +93,7 @@ function Slider.new(lib, parent, config)
     Handle.Parent = Track
 
     local dragging = false
+    local currentValue = default
 
     local function formatValue(v)
         local decimals = 0
@@ -109,10 +111,9 @@ function Slider.new(lib, parent, config)
         return str
     end
 
-    local function setFromInput(input)
-        local pos = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
-        local rawVal = min + ((max - min) * pos)
-        local val = snap(rawVal, step)
+    local function setValue(val)
+        val = snap(math.clamp(val, min, max), step)
+        currentValue = val
         Val.Text = formatValue(val)
         Fill.Size = UDim2.new((val - min) / (max - min), 0, 1, 0)
         Handle.Position = UDim2.new((val - min) / (max - min), -4, 0.5, -4)
@@ -120,6 +121,22 @@ function Slider.new(lib, parent, config)
             callback(val)
         end
     end
+
+    local function setFromInput(input)
+        local pos = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
+        local rawVal = min + ((max - min) * pos)
+        setValue(rawVal)
+    end
+
+    Val.FocusLost:Connect(function()
+        local rawText = Val.Text:gsub(suffix, ""):gsub("%%s", "")
+        local num = tonumber(rawText)
+        if num then
+            setValue(num)
+        else
+            Val.Text = formatValue(currentValue)
+        end
+    end)
 
     local inputEndedConn
     local inputChangedConn

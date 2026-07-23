@@ -101,13 +101,15 @@ function Keybind.new(lib, parent, config)
 
         conn = UserInputService.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.Keyboard then
-                keyCode = input.KeyCode
-
-                if isCallbackMode then
-                    -- Keep keyCode local, callback fires on global listener below.
+                if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.Backspace then
+                    keyCode = nil
                 else
+                    keyCode = input.KeyCode
+                end
+
+                if not isCallbackMode then
                     if configTable and configKey then
-                        configTable[configKey] = input.KeyCode
+                        configTable[configKey] = keyCode
                     end
                 end
 
