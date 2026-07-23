@@ -60,7 +60,7 @@ function Dropdown.new(lib, parent, config)
     local DropFrame = Instance.new("Frame")
     DropFrame.Name = "DropFrame"
     DropFrame.Size = UDim2.new(0, 0, 0, 0)
-    DropFrame.Position = UDim2.new(0, 0, 0, 0)
+    DropFrame.Position = UDim2.new(0.4, 0, 1, 2)
     DropFrame.BackgroundColor3 = theme.dropdown.list_bg
     lib:_registerTheme(DropFrame, "BackgroundColor3", "dropdown", "list_bg")
     DropFrame.BorderSizePixel = 0
@@ -82,15 +82,22 @@ function Dropdown.new(lib, parent, config)
     local function toggleDrop()
         open = not open
         if open then
-            local btnPos = Button.AbsolutePosition
-            local btnSize = Button.AbsoluteSize
-            local h = math.min(#options * 20, 120)
-            DropFrame.Position = UDim2.new(0, btnPos.X, 0, btnPos.Y + btnSize.Y + 2)
-            DropFrame.Size = UDim2.new(0, btnSize.X, 0, h)
-            DropFrame.Visible = true
+            if DropFrame.Parent:IsA("ScreenGui") then
+                local btnPos = Button.AbsolutePosition
+                local btnSize = Button.AbsoluteSize
+                local h = math.min(#options * 20, 120)
+                DropFrame.Position = UDim2.new(0, btnPos.X, 0, btnPos.Y + btnSize.Y + 2)
+                DropFrame.Size = UDim2.new(0, btnSize.X, 0, h)
+            else
+                local h = math.min(#options * 20, 120)
+                DropFrame.Size = UDim2.new(0.6, 0, 0, h)
+            end
         else
-            DropFrame.Visible = false
+            if not DropFrame.Parent:IsA("ScreenGui") then
+                DropFrame.Size = UDim2.new(0.6, 0, 0, 0)
+            end
         end
+        DropFrame.Visible = open
     end
 
     Button.MouseButton1Click:Connect(toggleDrop)

@@ -74,9 +74,9 @@ function MultiSelect.new(lib, parent, config)
     DropFrame.BackgroundColor3 = theme.dropdown.list_bg
     DropFrame.BorderSizePixel = 0
     DropFrame.Visible = false
-    DropFrame.ZIndex = 50
+    DropFrame.ZIndex = 9999
     DropFrame.ClipsDescendants = true
-    DropFrame.Parent = Frame
+    DropFrame.Parent = Frame:FindFirstAncestorWhichIsA("ScreenGui") or lib._screenGui or Frame
     lib:_corner(DropFrame, 2)
     lib:_stroke(DropFrame, theme.dropdown.border, 1)
 
@@ -88,7 +88,20 @@ function MultiSelect.new(lib, parent, config)
     local open = false
     local function toggleDrop()
         open = not open
-        DropFrame.Size = UDim2.new(0.6, 0, 0, open and math.min(#options * 22, 110) or 0)
+        if open then
+            if DropFrame.Parent:IsA("ScreenGui") then
+                local btnPos = Button.AbsolutePosition
+                local btnSize = Button.AbsoluteSize
+                DropFrame.Position = UDim2.new(0, btnPos.X, 0, btnPos.Y + btnSize.Y + 2)
+                DropFrame.Size = UDim2.new(0, btnSize.X, 0, math.min(#options * 22, 110))
+            else
+                DropFrame.Size = UDim2.new(0.6, 0, 0, math.min(#options * 22, 110))
+            end
+        else
+            if not DropFrame.Parent:IsA("ScreenGui") then
+                DropFrame.Size = UDim2.new(0.6, 0, 0, 0)
+            end
+        end
         DropFrame.Visible = open
     end
 
@@ -106,7 +119,7 @@ function MultiSelect.new(lib, parent, config)
         OptBtn.TextSize = theme.sizes.value
         OptBtn.TextXAlignment = Enum.TextXAlignment.Left
         OptBtn.AutoButtonColor = false
-        OptBtn.ZIndex = 51
+        OptBtn.ZIndex = 10000
         OptBtn.Parent = DropFrame
         optBtns[opt] = OptBtn
 

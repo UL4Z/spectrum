@@ -196,6 +196,15 @@ function ColorPicker.new(lib, parent, config)
     local open = false
     ColorBtn.MouseButton1Click:Connect(function()
         open = not open
+        if open then
+            if PickerFrame.Parent:IsA("ScreenGui") then
+                local btnPos = ColorBtn.AbsolutePosition
+                local btnSize = ColorBtn.AbsoluteSize
+                PickerFrame.Position = UDim2.new(0, btnPos.X - 185 + btnSize.X, 0, btnPos.Y + btnSize.Y + 2)
+            else
+                PickerFrame.Position = UDim2.new(1, -185, 1, 5)
+            end
+        end
         PickerFrame.Visible = open
     end)
 
