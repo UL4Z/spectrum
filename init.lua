@@ -338,6 +338,129 @@ function Spectrum:_registerAccent(element, property)
     table.insert(self._accentElements, {element = element, property = property})
 end
 
+function Spectrum:Dialog(config)
+    config = config or {}
+    local title = config.Title or "Confirm"
+    local content = config.Content or ""
+    local buttons = config.Buttons or {}
+    
+    local theme = self.theme
+    local accent = self.accent
+    
+    local parentGui = self._screenGui or (self._windows and self._windows[1] and self._windows[1]._main.Parent)
+    if not parentGui then
+        pcall(function() parentGui = game:GetService("CoreGui") end)
+        if not parentGui then parentGui = LocalPlayer:WaitForChild("PlayerGui") end
+    end
+    
+    local Overlay = Instance.new("Frame")
+    Overlay.Size = UDim2.fromScale(1, 1)
+    Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Overlay.BackgroundTransparency = 0.55
+    Overlay.ZIndex = 1000
+    Overlay.Parent = parentGui
+    
+    local Modal = Instance.new("Frame")
+    Modal.Size = UDim2.fromOffset(320, 150)
+    Modal.Position = UDim2.fromScale(0.5, 0.5)
+    Modal.AnchorPoint = Vector2.new(0.5, 0.5)
+    Modal.BackgroundColor3 = theme.groupbox.background
+    Modal.BorderSizePixel = 0
+    Modal.ZIndex = 1001
+    Modal.Parent = Overlay
+    self:_corner(Modal, theme.sizes.corner_groupbox or 4)
+    local stroke = self:_stroke(Modal, theme.groupbox.border, 1)
+    self:_registerTheme(Modal, "BackgroundColor3", "groupbox", "background")
+    self:_registerTheme(stroke, "Color", "groupbox", "border")
+    
+    local TopAccent = Instance.new("Frame")
+    TopAccent.Size = UDim2.new(1, 0, 0, 2)
+    TopAccent.BackgroundColor3 = accent
+    TopAccent.BorderSizePixel = 0
+    TopAccent.ZIndex = 1002
+    TopAccent.Parent = Modal
+    self:_registerAccent(TopAccent, "BackgroundColor3")
+    
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Size = UDim2.new(1, -20, 0, 24)
+    TitleLabel.Position = UDim2.fromOffset(10, 8)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Text = title
+    TitleLabel.TextColor3 = accent
+    TitleLabel.Font = theme.fonts.header
+    TitleLabel.TextSize = theme.sizes.header
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.ZIndex = 1002
+    TitleLabel.Parent = Modal
+    self:_registerAccent(TitleLabel, "TextColor3")
+    self:_registerTheme(TitleLabel, "Font", "fonts", "header")
+    
+    local ContentLabel = Instance.new("TextLabel")
+    ContentLabel.Size = UDim2.new(1, -20, 0, 50)
+    ContentLabel.Position = UDim2.fromOffset(10, 36)
+    ContentLabel.BackgroundTransparency = 1
+    ContentLabel.Text = content
+    ContentLabel.TextColor3 = theme.textbox.text
+    ContentLabel.Font = theme.fonts.label
+    ContentLabel.TextSize = theme.sizes.label
+    ContentLabel.TextWrapped = true
+    ContentLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ContentLabel.ZIndex = 1002
+    ContentLabel.Parent = Modal
+    self:_registerTheme(ContentLabel, "TextColor3", "textbox", "text")
+    self:_registerTheme(ContentLabel, "Font", "fonts", "label")
+    
+    local BtnContainer = Instance.new("Frame")
+    BtnContainer.Size = UDim2.new(1, -20, 0, 28)
+    BtnContainer.Position = UDim2.new(0, 10, 1, -36)
+    BtnContainer.BackgroundTransparency = 1
+    BtnContainer.ZIndex = 1002
+    BtnContainer.Parent = Modal
+    
+    local BtnLayout = Instance.new("UIListLayout")
+    BtnLayout.FillDirection = Enum.FillDirection.Horizontal
+    BtnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    BtnLayout.Padding = UDim.new(0, 8)
+    BtnLayout.Parent = BtnContainer
+    
+    for _, btnData in ipairs(buttons) do
+        local Btn = Instance.new("TextButton")
+        Btn.Size = UDim2.fromOffset(90, 26)
+        Btn.BackgroundColor3 = theme.button.background
+        Btn.BorderSizePixel = 0
+        Btn.Text = btnData.Title or "OK"
+        Btn.TextColor3 = theme.button.text
+        Btn.Font = theme.fonts.value
+        Btn.TextSize = theme.sizes.value
+        Btn.AutoButtonColor = false
+        Btn.ZIndex = 1003
+        Btn.Parent = BtnContainer
+        self:_corner(Btn, theme.sizes.corner or 2)
+        local btnStroke = self:_stroke(Btn, theme.groupbox.border, 1)
+        self:_registerTheme(Btn, "BackgroundColor3", "button", "background")
+        self:_registerTheme(Btn, "TextColor3", "button", "text")
+        self:_registerTheme(btnStroke, "Color", "groupbox", "border")
+        
+        Btn.MouseEnter:Connect(function()
+            Btn.BackgroundColor3 = theme.button.background_hover
+            Btn.TextColor3 = theme.button.text_hover
+        end)
+        Btn.MouseLeave:Connect(function()
+            Btn.BackgroundColor3 = theme.button.background
+            Btn.TextColor3 = theme.button.text
+        end)
+        
+        Btn.MouseButton1Click:Connect(function()
+            Overlay:Destroy()
+            if btnData.Callback then
+                btnData.Callback()
+            end
+        end)
+    end
+    
+    return Overlay
+end
+
 function Spectrum:Window()
     local lib = self
     local theme = self.theme
