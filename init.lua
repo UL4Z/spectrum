@@ -33,12 +33,19 @@ local LocalPlayer = Players.LocalPlayer
 
 -- New modular core
 local function tryRequire(path)
-    local ok, mod = pcall(function()
-        return loadstring(readfile(path))()
-    end)
-    if ok and mod then
-        return mod
+    if not readfile then return nil end
+    local isfileFn = isfile or is_file
+    if isfileFn then
+        local exists = false
+        pcall(function() exists = isfileFn(path) end)
+        if not exists then return nil end
     end
+    local ok, src = pcall(readfile, path)
+    if not ok or type(src) ~= "string" or src == "" then return nil end
+    local fn = loadstring(src)
+    if not fn then return nil end
+    local okRun, mod = pcall(fn)
+    if okRun then return mod end
     return nil
 end
 

@@ -61,7 +61,6 @@ function WindowManager:BuildWindow(title, tween, corner, stroke)
     main.BorderSizePixel = 0
     main.ZIndex = 1
     main.Parent = self.Gui
-    makeDraggable(main)
 
     if corner and theme.sizes and theme.sizes.corner then
         corner(main, theme.sizes.corner)
@@ -69,6 +68,45 @@ function WindowManager:BuildWindow(title, tween, corner, stroke)
     if stroke and theme.window and theme.window.border then
         stroke(main, theme.window.border, theme.window.border_thickness or 1)
     end
+
+    -- Native Window Resizing Grip
+    local ResizeGrip = Instance.new("TextButton")
+    ResizeGrip.Name = "ResizeGrip"
+    ResizeGrip.Size = UDim2.new(0, 14, 0, 14)
+    ResizeGrip.Position = UDim2.new(1, -14, 1, -14)
+    ResizeGrip.BackgroundTransparency = 1
+    ResizeGrip.Text = "◢"
+    ResizeGrip.TextColor3 = theme.window and theme.window.title_text or Color3.fromRGB(200, 200, 200)
+    ResizeGrip.Font = Enum.Font.Code
+    ResizeGrip.TextSize = 10
+    ResizeGrip.ZIndex = 50
+    ResizeGrip.Parent = main
+
+    local resizing = false
+    local resizeStart, startSize
+
+    ResizeGrip.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            resizing = true
+            resizeStart = input.Position
+            startSize = main.Size
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    resizing = false
+                end
+            end)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - resizeStart
+            local newW = math.clamp(startSize.X.Offset + delta.X, 380, 1000)
+            local newH = math.clamp(startSize.Y.Offset + delta.Y, 300, 800)
+            main.Size = UDim2.new(0, newW, 0, newH)
+        end
+    end)
 
     local accentLine = Instance.new("Frame")
     accentLine.Size = UDim2.new(1, 0, 0, 2)
@@ -85,6 +123,42 @@ function WindowManager:BuildWindow(title, tween, corner, stroke)
     titleBar.BorderSizePixel = 0
     titleBar.ZIndex = 2
     titleBar.Parent = main
+
+    -- Smooth Titlebar Dragging
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    titleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = main.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    titleBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            if tween and type(tween) == "function" then
+                tween(main, {Position = targetPos}, 0.08)
+            else
+                main.Position = targetPos
+            end
+        end
+    end)
 
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = tostring(title or "spectrum")
