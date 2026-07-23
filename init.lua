@@ -509,38 +509,6 @@ function Spectrum:Window()
         self:_corner(Main, theme.sizes.corner)
         self:_stroke(Main, theme.window.border, theme.window.border_thickness)
 
-        -- Smooth Titlebar Dragging
-        local dragging = false
-        local dragInput, dragStart, startPos
-
-        TitleBar.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                dragStart = input.Position
-                startPos = Main.Position
-
-                input.Changed:Connect(function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end)
-            end
-        end)
-
-        TitleBar.InputChanged:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-                dragInput = input
-            end
-        end)
-
-        UserInputService.InputChanged:Connect(function(input)
-            if input == dragInput and dragging then
-                local delta = input.Position - dragStart
-                local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-                tween(Main, {Position = targetPos}, 0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-            end
-        end)
-
         -- Native Window Resizing Grip
         local ResizeGrip = Instance.new("TextButton")
         ResizeGrip.Name = "ResizeGrip"
@@ -598,6 +566,38 @@ function Spectrum:Window()
         TitleBar.BorderSizePixel = 0
         TitleBar.ZIndex = 2
         TitleBar.Parent = Main
+
+        -- Smooth Titlebar Dragging
+        local dragging = false
+        local dragInput, dragStart, startPos
+
+        TitleBar.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = Main.Position
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        TitleBar.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(input)
+            if input == dragInput and dragging then
+                local delta = input.Position - dragStart
+                local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                tween(Main, {Position = targetPos}, 0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+            end
+        end)
         
         local TitleLabel = Instance.new("TextLabel")
         TitleLabel.Text = self.title:lower()
