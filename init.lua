@@ -920,7 +920,7 @@ function Spectrum:Window()
             Container.BackgroundColor3 = lib.theme.groupbox.background
             lib:_registerTheme(Container, "BackgroundColor3", "groupbox", "background")
             Container.BorderSizePixel = 0
-            Container.ZIndex = 1
+            Container.ZIndex = 4
             Container.Parent = self._page
             
             local c = corner(Container, lib.theme.sizes.corner_groupbox)
@@ -940,7 +940,7 @@ function Spectrum:Window()
             lib:_registerTheme(Header, "BackgroundColor3", "groupbox", "header")
             Header.BorderSizePixel = 0
             Header.LayoutOrder = 1
-            Header.ZIndex = 2
+            Header.ZIndex = 5
             Header.Parent = Container
             
             local ch = corner(Header, lib.theme.sizes.corner_groupbox)
@@ -957,7 +957,7 @@ function Spectrum:Window()
             HeaderLabel.TextSize = lib.theme.sizes.header
             lib:_registerTheme(HeaderLabel, "TextSize", "sizes", "header")
             HeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
-            HeaderLabel.ZIndex = 3
+            HeaderLabel.ZIndex = 6
             HeaderLabel.Parent = Header
             lib:_registerAccent(HeaderLabel, "TextColor3")
             
@@ -966,7 +966,7 @@ function Spectrum:Window()
             Content.AutomaticSize = Enum.AutomaticSize.Y
             Content.BackgroundTransparency = 1
             Content.LayoutOrder = 2
-            Content.ZIndex = 2
+            Content.ZIndex = 5
             Content.Parent = Container
             
             local ContentList = Instance.new("UIListLayout")
