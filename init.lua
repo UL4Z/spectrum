@@ -503,12 +503,83 @@ function Spectrum:Window()
         self:_registerTheme(Main, "BackgroundColor3", "window", "background")
         Main.BorderSizePixel = 0
         Main.Active = true
-        Main.Draggable = true
         Main.ZIndex = 1
         Main.Parent = ScreenGui
         
         self:_corner(Main, theme.sizes.corner)
         self:_stroke(Main, theme.window.border, theme.window.border_thickness)
+
+        -- Smooth Titlebar Dragging
+        local dragging = false
+        local dragInput, dragStart, startPos
+
+        TitleBar.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = Main.Position
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        TitleBar.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(input)
+            if input == dragInput and dragging then
+                local delta = input.Position - dragStart
+                local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                tween(Main, {Position = targetPos}, 0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+            end
+        end)
+
+        -- Native Window Resizing Grip
+        local ResizeGrip = Instance.new("TextButton")
+        ResizeGrip.Name = "ResizeGrip"
+        ResizeGrip.Size = UDim2.new(0, 14, 0, 14)
+        ResizeGrip.Position = UDim2.new(1, -14, 1, -14)
+        ResizeGrip.BackgroundTransparency = 1
+        ResizeGrip.Text = "◢"
+        ResizeGrip.TextColor3 = theme.window.title_text
+        self:_registerTheme(ResizeGrip, "TextColor3", "window", "title_text")
+        ResizeGrip.Font = Enum.Font.Code
+        ResizeGrip.TextSize = 10
+        ResizeGrip.ZIndex = 50
+        ResizeGrip.Parent = Main
+
+        local resizing = false
+        local resizeStart, startSize
+
+        ResizeGrip.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                resizing = true
+                resizeStart = input.Position
+                startSize = Main.Size
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        resizing = false
+                    end
+                end)
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(input)
+            if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                local delta = input.Position - resizeStart
+                local newW = math.clamp(startSize.X.Offset + delta.X, 380, 1000)
+                local newH = math.clamp(startSize.Y.Offset + delta.Y, 300, 800)
+                Main.Size = UDim2.new(0, newW, 0, newH)
+            end
+        end)
         
         local AccentLine = Instance.new("Frame")
         AccentLine.Size = UDim2.new(1, 0, 0, 2)
