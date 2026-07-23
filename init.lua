@@ -84,14 +84,18 @@ local THEMES = {
     },
     neverlose = {
         name = "neverlose",
-        window = {background = Color3.fromRGB(9, 9, 13), border = Color3.fromRGB(0, 0, 0), title = Color3.fromRGB(0, 20, 40), title_text = Color3.fromRGB(255, 255, 255), watermark = Color3.fromRGB(255, 255, 255)},
-        tab = {bar = Color3.fromRGB(7, 15, 25), active = Color3.fromRGB(61, 133, 224), inactive = Color3.fromRGB(200, 200, 200), line = Color3.fromRGB(61, 133, 224)},
+        window = {background = Color3.fromRGB(9, 9, 13), border = Color3.fromRGB(0, 0, 0), border_thickness = 2, titlebar = Color3.fromRGB(0, 20, 40), title = Color3.fromRGB(0, 20, 40), title_text = Color3.fromRGB(255, 255, 255), watermark = Color3.fromRGB(255, 255, 255), content = Color3.fromRGB(9, 9, 13)},
+        tab = {bar = Color3.fromRGB(7, 15, 25), background = Color3.fromRGB(7, 15, 25), active = Color3.fromRGB(61, 133, 224), inactive = Color3.fromRGB(200, 200, 200), hover = Color3.fromRGB(100, 170, 240), line = Color3.fromRGB(61, 133, 224)},
         section = {background = Color3.fromRGB(0, 20, 40), text = Color3.fromRGB(255, 255, 255), border = Color3.fromRGB(20, 20, 30)},
-        element = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), border = Color3.fromRGB(14, 191, 255)}, -- Glow as border
-        toggle = {on = Color3.fromRGB(61, 133, 224), off = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
-        slider = {inner = Color3.fromRGB(61, 133, 224), outer = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
-        dropdown = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), item = Color3.fromRGB(61, 133, 224), list_bg = Color3.fromRGB(5, 10, 20)},
-        button = {background = Color3.fromRGB(6, 45, 66), text = Color3.fromRGB(255, 255, 255)},
+        element = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), border = Color3.fromRGB(14, 191, 255)},
+        fonts = {title = Enum.Font.GothamBold, label = Enum.Font.Gotham, value = Enum.Font.Code, header = Enum.Font.GothamBold},
+        sizes = {title = 13, label = 11, value = 10, header = 11, corner = 2, corner_groupbox = 4},
+        groupbox = {background = Color3.fromRGB(7, 15, 25), header = Color3.fromRGB(0, 20, 40), border = Color3.fromRGB(20, 20, 30)},
+        toggle = {background = Color3.fromRGB(15, 25, 39), border_off = Color3.fromRGB(74, 87, 97), label_on = Color3.fromRGB(255, 255, 255), label_off = Color3.fromRGB(160, 160, 170), on = Color3.fromRGB(61, 133, 224), off = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
+        dropdown = {background = Color3.fromRGB(15, 25, 39), text = Color3.fromRGB(255, 255, 255), item = Color3.fromRGB(61, 133, 224), list_bg = Color3.fromRGB(5, 10, 20), list_item = Color3.fromRGB(10, 20, 35), list_item_hover = Color3.fromRGB(20, 40, 60), list_text = Color3.fromRGB(220, 220, 230), border = Color3.fromRGB(20, 40, 60)},
+        button = {background = Color3.fromRGB(6, 45, 66), background_hover = Color3.fromRGB(10, 60, 90), background_click = Color3.fromRGB(15, 75, 110), text = Color3.fromRGB(255, 255, 255), text_hover = Color3.fromRGB(61, 133, 224)},
+        slider = {track = Color3.fromRGB(15, 25, 39), handle = Color3.fromRGB(220, 220, 225), label = Color3.fromRGB(200, 200, 210), value = Color3.fromRGB(61, 133, 224), inner = Color3.fromRGB(61, 133, 224), outer = Color3.fromRGB(74, 87, 97), text = Color3.fromRGB(255, 255, 255)},
+        textbox = {background = Color3.fromRGB(10, 18, 30), border = Color3.fromRGB(20, 40, 60), text = Color3.fromRGB(220, 220, 225), placeholder = Color3.fromRGB(80, 90, 110), label = Color3.fromRGB(200, 200, 210)},
         colorpicker = {background = Color3.fromRGB(15, 25, 39), border = Color3.fromRGB(14, 191, 255)},
         keybind = {background = Color3.fromRGB(0, 28, 56), text = Color3.fromRGB(255, 255, 255), label = Color3.fromRGB(200, 200, 210)},
         scrollbar = Color3.fromRGB(60, 60, 70),
@@ -1035,7 +1039,11 @@ function Spectrum:Window()
                     if callback then callback(val) end
                 end
                 
-                Track.MouseButton1Down:Connect(function() dragging = true end)
+                -- Track click to start drag and setup connections
+                Track.MouseButton1Down:Connect(function()
+                    dragging = true
+                    setupDragConnections()
+                end)
                 
                 local inputEndedConn = nil
                 local inputChangedConn = nil
@@ -1062,13 +1070,13 @@ function Spectrum:Window()
                     dragging = false
                 end
                 
-                Track.MouseButton1Down:Connect(setupDragConnections)
-                
                 Frame.AncestryChanged:Connect(function()
                     if not Frame:IsDescendantOf(game) then
                         cleanupDragConnections()
                     end
                 end)
+                
+                return Frame
             end
             
             function group:Dropdown(text, options, default, callback)
@@ -1198,6 +1206,8 @@ function Spectrum:Window()
                         toggleDrop()
                     end)
                 end
+                
+                return Frame
             end
             
             function group:TextBox(label, placeholder, callback)
