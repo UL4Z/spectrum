@@ -982,6 +982,7 @@ function Spectrum:Window()
             ContentPadding.Parent = Content
             
             group._content = Content
+            group._container = Container
             group._lib = lib
             
             function group:Toggle(text, default, callback, configKey)

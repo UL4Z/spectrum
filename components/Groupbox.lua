@@ -81,6 +81,7 @@ function Groupbox.new(lib, parent, config)
     
     local group = {}
     group._content = Content
+    group._container = Container
     group._lib = lib
     
     -- Helper to create components via registry
